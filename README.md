@@ -1,202 +1,139 @@
-# LO17 & RAG Intelligence Hub
+# 🪄 LO17 & RAG Intelligence Hub
 
-Este projeto integra o **Moteur de Recherche d'Information** clássico (desenvolvido nos TDs 1 a 6 da disciplina LO17 na UTC) e um **Assistente de Perguntas & Respostas RAG (Retrieval-Augmented Generation)** baseado no universo de Harry Potter, utilizando a API do Gemini, LangChain, banco de dados vetorial ChromaDB e interface Streamlit.
+Ce projet intègre de manière modulaire et interactive deux grands paradigmes de la recherche d'information :
+1. **Un Moteur de Recherche Classique (Booléen & Vectoriel)** : Développé dans le cadre des travaux dirigés (TDs 1 à 6) de l'unité d'enseignement **LO17** à l'UTC (Université de Technologie de Compiègne). Ce moteur a été entièrement adapté pour indexer, analyser et interroger l'intégralité des livres de la saga *Harry Potter*.
+2. **Un Assistant RAG (Retrieval-Augmented Generation)** : Un agent conversationnel intelligent qui s'appuie sur le framework **LangChain**, les modèles de pointe **Google Gemini** (via l'API Gemini), la base de données vectorielle **ChromaDB** et un module d'évaluation automatique des hallucinations ("LLM-as-a-judge").
+
+L'ensemble du projet est piloté par une interface utilisateur unifiée, dynamique et élégante développée avec **Streamlit**, offrant des visualisations de logs en temps réel, un tableau de bord d'audit des réponses et un processus d'initialisation transparent.
 
 ---
 
-## Estrutura do Projeto
+## 📂 Structure du Projet
 
-A nova estrutura do projeto é organizada na raiz de forma modular:
+L'organisation des répertoires a été conçue pour séparer proprement le code source, les données d'entrée, les fichiers d'indexation générés et l'interface utilisateur.
 
-```
+```text
 RAG/
-├── .env.example               # Exemplo de configuração de chaves (GOOGLE_API_KEY)
-├── environment.yml            # Arquivo de ambiente Conda unificado
-├── requirements.txt           # Dependências de execução via pip
-├── app.py                     # Dashboard integrado Streamlit (Moteur clássico + RAG Harry Potter)
+├── .env.example               # Modèle de configuration des variables d'environnement (ex: GOOGLE_API_KEY)
+├── environment.yml            # Fichier de configuration de l'environnement virtuel Conda (unifié)
+├── requirements.txt           # Dépendances Python pour une installation via pip
+├── app.py                     # Point d'entrée de l'application web Streamlit (Hub intégré)
 ├── data/
-│   ├── input/                 # PDFs originais de Harry Potter para RAG (Livros 1 a 7)
-│   └── output/                # Ficheiros gerados pelos pipelines (indexadores, ChromaDB, etc.)
-│       ├── TD1/               # XML gerado pelo parsing do Moteur
-│       ├── TD2/               # Anti-dicionário e XML filtrado
-│       ├── TD3/               # Stems e índices invertidos do Moteur
-│       ├── evaluation/        # Resultados de testes e precisão/recall do Moteur
-│       └── vectorstore/       # Banco de dados vetorial Chroma contendo os embeddings dos livros
-└── src/                       # Código-fonte principal
-    ├── research-engine/       # Backend do motor de busca clássico LO17 (stems, index, SQL)
-    ├── RAG/                   # Módulos do pipeline RAG
-    │   ├── loader_pdf.py      # Carregamento e particionamento dos PDFs
-    │   ├── vectorstore.py     # Criação de embeddings e gerência do ChromaDB
-    │   ├── chain.py           # Configuração de prompt e fluxo RAG (LangChain + Gemini)
-    │   └── evaluation.py      # Avaliação de fidelidade/relevância e detecção de alucinações
-    └── search_adapters/       # Adaptador para execução integrada do motor clássico
+│   ├── input/                 # Contient les documents PDF originaux (Livres de Harry Potter 1 à 7)
+│   └── output/                # Fichiers de sortie générés automatiquement par les pipelines
+│       ├── TD1/               # Fichier XML brut issu du parsing initial des livres
+│       ├── TD2/               # Anti-dictionnaire (mots vides) et fichier XML filtré
+│       ├── TD3/               # Stems (racines), dictionnaires et index inversés finaux
+│       ├── evaluation/        # Données et statistiques d'évaluation (Précision/Rappel) du moteur classique
+│       └── vectorstore/       # Fichiers de la base de données vectorielle ChromaDB
+└── src/                       # Code source de l'application
+    ├── research_engine/       # Composants du moteur de recherche classique LO17
+    │   ├── pdf_corpus_parser.py  # Extraction de texte des PDF et structuration au format XML
+    │   ├── tokenizer.py          # Tokenisation, filtrage des stopwords et statistiques
+    │   ├── stemmer.py            # Racinisation (stemming) en s'appuyant sur NLTK (règles françaises)
+    │   ├── xml_builder.py        # Outils de manipulation de fichiers XML
+    │   ├── inverted_index.py     # Construction de l'index inversé et calcul des poids TF-IDF
+    │   ├── moteur.py             # Moteur de recherche et exécution des requêtes booléennes
+    │   ├── traitement_requete.py # Analyse syntaxique, correction orthographique et extraction de métadonnées
+    │   ├── spell_checker.py      # Module de suggestion et correction orthographique (distance de Levenshtein)
+    │   ├── evaluation.py         # Outil d'évaluation des performances du moteur classique (TD6)
+    │   ├── check_project.py      # Script de vérification de l'intégrité de la structure et des fichiers requis
+    │   └── verify_backend_queries.py # Script de validation des requêtes SQL et logiques en console
+    ├── RAG/                   # Composants du pipeline de génération augmentée (RAG)
+    │   ├── loader_pdf.py      # Chargement et découpage intelligent (chunking) des livres PDF
+    │   ├── vectorstore.py     # Génération des embeddings et persistance avec ChromaDB
+    │   ├── chain.py           # Orchestration de la chaîne RAG avec LangChain et l'API Gemini
+    │   └── evaluation.py      # Audit de fidélité et pertinence ("LLM-as-a-judge" anti-hallucination)
+    └── search_adapters/       # Adaptateurs pour la communication entre le backend classique et l'UI
+        └── search_bridge.py   # Passerelle convertissant les requêtes utilisateurs en commandes LO17
 ```
 
 ---
 
-## Instalação e Configuração
+## 🛠️ Installation et Configuration
 
-### 1. Criar o Ambiente Conda
+### 1. Cloner le Projet
+Assurez-vous de disposer de l'intégralité des fichiers du projet sur votre machine locale.
 
-Crie o ambiente virtual a partir do arquivo unificado:
+### 2. Placer les Documents de Référence
+Déposez les fichiers PDF correspondant aux 7 livres de *Harry Potter* dans le répertoire suivant :
+`data/input/` (les fichiers doivent être nommés ou structurés pour être reconnus, par exemple `HP1.pdf`, `HP2.pdf`, etc.).
 
+### 3. Créer l'Environnement Virtuel
+
+#### Option A : Avec Anaconda / Miniconda (Recommandé)
+Créez et configurez l'environnement à l'aide du fichier de configuration unifié `environment.yml` :
 ```bash
 conda env create -f environment.yml
 conda activate lo17-rag
 ```
 
-Ou, se preferir criar manualmente com virtualenv:
-
+#### Option B : Avec virtualenv et pip
+Si vous préférez utiliser l'outil standard `pip`, exécutez les commandes suivantes :
 ```bash
+# Création de l'environnement virtuel
 python -m venv .venv
-source .venv/bin/activate  # no Windows: .venv\Scripts\activate
+
+# Activation de l'environnement
+# Sur Windows :
+.venv\Scripts\activate
+# Sur macOS / Linux :
+source .venv/bin/activate
+
+# Installation des dépendances
 pip install -r requirements.txt
+
+# Téléchargement du modèle de langue SpaCy pour le français
 python -m spacy download fr_core_news_sm
 ```
 
-### 2. Configurar a Chave da API do Gemini
 
-Duplique o arquivo `.env.example` para `.env` na raiz do projeto e insira sua chave da API do Gemini:
+## 🚀 Lancement de l'Application
 
-```env
-GOOGLE_API_KEY=sua_chave_aqui
-```
-
-*Nota: Você também pode inserir a chave de API diretamente pela interface web da barra lateral no Streamlit.*
-
----
-
-## Executando o Dashboard Streamlit
-
-Para iniciar o painel web interativo completo:
+Pour lancer l'interface web interactive Streamlit :
 
 ```bash
 streamlit run app.py
 ```
 
-O dashboard estará disponível em `http://localhost:8501` e possui duas abas:
-1. **Moteur de Recherche Classique (Bulletins ADIT):** Permite interagir com o motor clássico e inspecionar os logs de execução do backend detalhadamente.
-2. **Assistant RAG (Harry Potter):** Chatbot para fazer perguntas sobre os livros de Harry Potter, exibir os trechos originais recuperados como contexto e auditar as respostas contra alucinações.
+L'interface s'ouvrira automatiquement dans votre navigateur par défaut à l'adresse suivante : `http://localhost:8501`.
+
+### L'Écran d'Initialisation Automatique (Loading Screen)
+Lors du premier lancement (ou si certains fichiers requis sont manquants dans `data/output/`), l'application bascule sur un **écran de chargement bloquant**.
+Cet écran exécute pas à pas l'ensemble des tâches de traitement et affiche la progression en temps réel à l'utilisateur :
+- **Moteur Classique :**
+  1. *Phase 1/4 :* Parsing de tous les PDFs de Harry Potter présents dans `data/input/` pour générer un fichier XML consolidé (`data/output/TD1/xml.xml`).
+  2. *Phase 2/4 :* Tokenisation (découpage en mots), suppression de la ponctuation, conversion en minuscules et application de l'anti-dictionnaire pour filtrer les mots vides.
+  3. *Phase 3/4 :* Racinisation (Stemming) à l'aide de NLTK pour associer chaque terme à sa racine morphologique en français.
+  4. *Phase 4/4 :* Construction des index inversés et des dictionnaires finaux avec calcul des fréquences de termes (TF-IDF).
+- **RAG (Assistant IA) :**
+  - Si la base vectorielle ChromaDB n'existe pas, l'application vous invite à saisir votre clé API Gemini (si non fournie dans le `.env`).
+  - L'application procède alors au découpage des livres en segments de texte (chunks), calcule leurs vecteurs de caractéristiques (embeddings) via le modèle `gemini-embedding-001` et les sauvegarde dans la base vectorielle persistante (`data/output/vectorstore/`).
+
+Une fois toutes ces étapes complétées avec succès, la page se recharge automatiquement et donne accès à l'interface de recherche.
 
 ---
 
-## Executando os Testes e Avaliações de LO17
+## 💻 Fonctionnalités du Hub Streamlit
 
-Você pode rodar os scripts individuais de validação diretamente a partir da nova estrutura de diretórios:
+L'interface est structurée en deux onglets principaux :
 
-### Verificação de Consultas do Backend
-```bash
-python src/research-engine/verify_backend_queries.py
-```
+### 1. 🧙 Onglet : Assistant RAG (Harry Potter)
+Cet espace prend la forme d'un chatbot de discussion interactif.
+* **Saisie de Questions :** Vous pouvez poser des questions en français sur des détails précis des livres (ex: *"Qui a donné la cape d'invisibilité à Harry ?"* ou *"Qu'est-ce que l'Armée de Dumbledore ?"*).
+* **Affichage des Sources :** Pour chaque réponse fournie par l'IA, un panneau rétractable affiche les extraits originaux du livre récupérés dans la base vectorielle ChromaDB (indiquant le nom du livre et le paragraphe d'origine).
+* **Audit Anti-Hallucination :** L'application intègre un évaluateur automatique de réponses :
+  * **Fidélité (Faithfulness) :** Évalue (sur une échelle de 0 à 1) si l'affirmation formulée par l'IA est strictement supportée par les documents sources récupérés (évite les inventions).
+  * **Pertinence (Answer Relevance) :** Mesure si la réponse répond effectivement à la question posée.
+  * Les logs d'évaluation détaillés s'affichent sous chaque réponse, assurant une transparence totale.
 
-### Pipeline de Avaliação Experimental (TD6)
-```bash
-python src/research-engine/evaluation.py --runs 100 --inspect --top 50
-```
-
-### Verificação de Checklist de Entrega
-```bash
-python src/research-engine/check_project.py
-```
+### 2. 🔍 Onglet : Moteur de Recherche Classique (Harry Potter)
+Il s'agit de l'adaptation visuelle du moteur de recherche conçu lors des TDs de LO17.
+* **Requêtes en Langage Naturel ou Booléen :** Tapez une requête comme *"sortilège de protection contre les forces du mal"* ou utilisez des opérateurs.
+* **Extraction automatique de Métadonnées :** Le moteur isole automatiquement les critères de filtrage (titre, auteur, date, etc.).
+* **Racinisation et Correction :** La requête est normalisée (stems) et un correcteur d'orthographe dynamique basé sur la distance de Levenshtein propose des alternatives en cas de mot mal orthographié.
+* **Tri des Résultats :** Les résultats peuvent être triés par pertinence (score TF-IDF), par ordre chronologique ou antichronologique.
+* **Affichage des correspondances :** Les extraits de livres correspondants sont affichés avec une mise en évidence visuelle (surlignage en gras) des termes recherchés.
+* **Terminal de Logs :** Un panneau dédié affiche le déroulement des opérations internes du moteur classique (requête nettoyée, équation logique générée, arbres d'évaluation, temps d'exécution SQL/Index).
 
 ---
-
-## Como Funciona o Pipeline RAG
-
-1. **Leitura e Chunking (`loader_pdf.py`):** Carrega os 7 livros PDF localizados em `data/input/` e os divide em pedaços (chunks) de texto de 1000 caracteres com sobreposição de 200 caracteres.
-2. **Embeddings e Armazenamento (`vectorstore.py`):** Os fragmentos são convertidos em vetores de alta dimensão usando o modelo `gemini-embedding-001` da Google e gravados na pasta `data/output/vectorstore/`.
-3. **Recuperação e Geração (`chain.py`):** Ao fazer uma pergunta, o ChromaDB recupera os chunks mais semelhantes. Um prompt em francês envia a pergunta e o contexto ao modelo `gemini-3.5-flash` para elaborar a resposta.
-4. **Audit de Hallucinations (`evaluation.py`):** Um mecanismo de "LLM-as-a-judge" avalia as respostas produzidas, medindo a **Fidelidade (Faithfulness)** ao contexto e a **Relevância** em relação à pergunta.
-# RAG
-
-
-
-## Getting started
-
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
-
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
-
-## Add your files
-
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
-
-```
-cd existing_repo
-git remote add origin https://gitlab.utc.fr/irhudara/rag.git
-git branch -M main
-git push -uf origin main
-```
-
-## Integrate with your tools
-
-* [Set up project integrations](https://gitlab.utc.fr/irhudara/rag/-/settings/integrations)
-
-## Collaborate with your team
-
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
-
-***
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
