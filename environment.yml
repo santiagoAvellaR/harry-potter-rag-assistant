@@ -1,0 +1,25 @@
+name: rag
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - numpy
+  - matplotlib
+  - scikit-image
+  - jupyterlab
+  - ipykernel
+  - pip
+  - spacy
+  - nltk
+  - lxml
+  - flask
+  - pip:
+      - imageio
+      - streamlit
+      - langchain
+      - langchain-core
+      - langchain-google-genai
+      - langchain-community
+      - chromadb
+      - pypdf
+      - python-dotenv

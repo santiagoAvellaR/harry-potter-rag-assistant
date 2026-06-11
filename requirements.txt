@@ -1,0 +1,14 @@
+flask
+lxml
+nltk
+spacy
+matplotlib
+numpy
+streamlit
+langchain
+langchain-core
+langchain-google-genai
+langchain-community
+chromadb
+pypdf
+python-dotenv

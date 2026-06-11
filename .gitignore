@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.idea/
+data/output/
+local/
+src/__pycache__/
+.env
