@@ -3,5 +3,7 @@ __pycache__/
 .idea/
 data/output/
 local/
-src/__pycache__/
+src/RAG/__pycache__/
 .env
+src/research_engine/__pycache__/
+src/search_adapters/__pycache__/
