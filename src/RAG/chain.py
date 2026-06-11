@@ -59,7 +59,7 @@ class HarryPotterRAGChain:
     def query(self, question: str) -> Dict[str, Any]:
         """Queries the RAG chain and returns both the answer and the source documents."""
         # 1. Retrieve relevant documents
-        source_docs = self.retriever.get_relevant_documents(question)
+        source_docs = self.retriever.invoke(question)
         
         # 2. Format context
         context_text = self._format_docs(source_docs)
