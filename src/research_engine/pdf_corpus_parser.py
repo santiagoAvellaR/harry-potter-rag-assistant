@@ -32,8 +32,9 @@ def detect_book_num(filename: str) -> int:
 class PDFCorpusParser:
     """Parses PDF Harry Potter books and builds an XML corpus."""
     
-    def __init__(self, input_dir: str):
+    def __init__(self, input_dir: str, selected_files: list = None):
         self.input_dir = input_dir
+        self.selected_files = selected_files
         self.corpus = etree.Element('corpus')
 
     def parse(self) -> etree.Element:
@@ -41,7 +42,10 @@ class PDFCorpusParser:
         if not os.path.exists(self.input_dir):
             raise FileNotFoundError(f"Input directory {self.input_dir} not found.")
             
-        pdf_files = [f for f in os.listdir(self.input_dir) if f.endswith(".pdf")]
+        if self.selected_files is not None:
+            pdf_files = [f for f in self.selected_files if f.endswith(".pdf")]
+        else:
+            pdf_files = [f for f in os.listdir(self.input_dir) if f.endswith(".pdf")]
         # Sort files by book number
         pdf_files.sort(key=lambda x: detect_book_num(x) or 99)
         

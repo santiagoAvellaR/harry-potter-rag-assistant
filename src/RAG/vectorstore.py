@@ -5,19 +5,19 @@ import os
 from typing import List
 from langchain_core.documents import Document
 from langchain_community.vectorstores import Chroma
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 
 class RAGVectorStore:
     """Manages the creation, persistence, and loading of the Chroma vector store."""
     
-    def __init__(self, persist_dir: str, model_name: str = "models/gemini-embedding-001"):
+    def __init__(self, persist_dir: str, model_name: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"):
         self.persist_dir = persist_dir
         self.model_name = model_name
-        self.embeddings = GoogleGenerativeAIEmbeddings(model=self.model_name)
+        self.embeddings = HuggingFaceEmbeddings(model_name=self.model_name)
 
     def create_store(self, documents: List[Document], st_logger=None) -> Chroma:
         """Creates a new Chroma vector store from documents and persists it to disk."""
-        msg = f"🌐 Génération des embeddings via Gemini API et sauvegarde locale dans : {self.persist_dir}..."
+        msg = f"🌐 Génération des embeddings via HuggingFace et sauvegarde locale dans : {self.persist_dir}..."
         if st_logger:
             st_logger(msg)
         else:
@@ -48,7 +48,17 @@ class RAGVectorStore:
         )
 
     def exists(self) -> bool:
-        """Checks if a persisted vector store already exists on disk."""
-        # Chroma stores its index database in index files (like chroma.sqlite3) in the directory
+        """Checks if a persisted vector store already exists on disk and is non-empty."""
         sqlite_file = os.path.join(self.persist_dir, "chroma.sqlite3")
-        return os.path.exists(sqlite_file) or (os.path.exists(self.persist_dir) and len(os.listdir(self.persist_dir)) > 0)
+        if not os.path.exists(sqlite_file):
+            return False
+        try:
+            import sqlite3
+            conn = sqlite3.connect(sqlite_file)
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM embeddings;")
+            count = cursor.fetchone()[0]
+            conn.close()
+            return count > 0
+        except Exception:
+            return False

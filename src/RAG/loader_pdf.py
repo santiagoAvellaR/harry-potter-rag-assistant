@@ -10,10 +10,11 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 class PDFBookLoader:
     """Handles loading and chunking of PDF books from a directory."""
     
-    def __init__(self, directory_path: str, chunk_size: int = 1000, chunk_overlap: int = 200):
+    def __init__(self, directory_path: str, chunk_size: int = 2500, chunk_overlap: int = 500, selected_files: list = None):
         self.directory_path = directory_path
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
+        self.selected_files = selected_files
         self.splitter = RecursiveCharacterTextSplitter(
             chunk_size=self.chunk_size,
             chunk_overlap=self.chunk_overlap,
@@ -32,7 +33,10 @@ class PDFBookLoader:
             print(f"Loading PDFs from: {self.directory_path}...")
             
         docs = []
-        pdf_files = [f for f in os.listdir(self.directory_path) if f.endswith('.pdf')]
+        if self.selected_files is not None:
+            pdf_files = [f for f in self.selected_files if f.endswith('.pdf')]
+        else:
+            pdf_files = [f for f in os.listdir(self.directory_path) if f.endswith('.pdf')]
         
         for idx, pdf_file in enumerate(pdf_files, 1):
             pdf_path = os.path.join(self.directory_path, pdf_file)

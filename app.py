@@ -31,7 +31,7 @@ from src.RAG.loader_pdf import PDFBookLoader
 from src.RAG.vectorstore import RAGVectorStore
 from src.RAG.chain import HarryPotterRAGChain
 from src.RAG.evaluation import RAGEvaluator
-from src.research_engine.pdf_corpus_parser import PDFCorpusParser
+from src.research_engine.pdf_corpus_parser import PDFCorpusParser, detect_book_num, HP_METADATA
 from src.research_engine.tokenizer import Tokenizer
 from src.research_engine.inverted_index import InvertedIndexGenerator
 from src.research_engine.stemmer import Stemmer
@@ -72,32 +72,44 @@ st.markdown("""
         font-weight: 800;
     }
     
-    /* Header Gradient styling */
+    /* Minimalist Header Styling */
     .header-container {
-        background: linear-gradient(135deg, #2b1854 0%, #0d0628 100%);
-        padding: 2.5rem;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-        border: 1px solid #4a2d82;
-        box-shadow: 0 8px 32px 0 rgba(13, 6, 40, 0.37);
-        text-align: center;
+        padding: 1rem 0 1.5rem 0;
+        margin-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 15px;
     }
     
     .header-title {
-        color: #fdfdfd;
-        background: linear-gradient(90deg, #b8860b, #e6b800, #ffeb99);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-size: 2.8rem;
+        color: #f8fafc;
+        font-size: 1.8rem;
         margin: 0;
-        letter-spacing: 1px;
+        font-weight: 600;
+        letter-spacing: -0.5px;
     }
     
     .header-subtitle {
-        color: #b0a5cf;
-        font-size: 1.1rem;
-        margin-top: 0.5rem;
-        font-weight: 300;
+        color: #64748b;
+        font-size: 0.95rem;
+        margin: 0;
+    }
+
+    /* Modern Chat UI */
+    .stChatMessage {
+        padding: 1rem 0;
+    }
+    .stChatMessage[data-testid="chat-message-user"] {
+        background-color: transparent;
+    }
+    .stChatMessage[data-testid="chat-message-assistant"] {
+        background-color: transparent;
+    }
+    .stChatMessage .stMarkdown p {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: #e2e8f0;
     }
     
     /* LO17 Search Classic UI layout */
@@ -179,7 +191,27 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ----------------- SESSION STATE & INITIALIZATION -----------------
+# Helper to read/write indexed books list
+metadata_path = os.path.join(PROJECT_ROOT, "data", "output", "selected_books.json")
+
+def get_indexed_books() -> list:
+    if os.path.exists(metadata_path):
+        try:
+            with open(metadata_path, "r", encoding="utf-8") as f:
+                import json
+                return json.load(f)
+        except Exception:
+            return []
+    return []
+
+def save_indexed_books(books: list):
+    os.makedirs(os.path.dirname(metadata_path), exist_ok=True)
+    try:
+        with open(metadata_path, "w", encoding="utf-8") as f:
+            import json
+            json.dump(books, f, ensure_ascii=False, indent=2)
+    except Exception:
+        pass
 
 if "google_api_key" not in st.session_state:
     # Try reading from .env file if present
@@ -193,23 +225,149 @@ if "google_api_key" not in st.session_state:
                     break
     st.session_state["google_api_key"] = api_key_env
 
+if "rag_error" not in st.session_state:
+    st.session_state["rag_error"] = None
+if "rag_failed_bypass" not in st.session_state:
+    st.session_state["rag_failed_bypass"] = False
+
+if "selected_books" not in st.session_state:
+    st.session_state["selected_books"] = get_indexed_books()
+if "selection_confirmed" not in st.session_state:
+    st.session_state["selection_confirmed"] = len(st.session_state["selected_books"]) > 0
+
 # ----------------- GLOBAL INDEXING CHECK -----------------
 classic_td3_dir = os.path.join(PROJECT_ROOT, "data", "output", "TD3")
-rag_persist_dir = os.path.join(PROJECT_ROOT, "data", "output", "vectorstore")
+rag_persist_dir = os.path.join(PROJECT_ROOT, "data", "output", "vectorstore_fr")
 pdf_dir = os.path.join(PROJECT_ROOT, "data", "input")
 
 classic_ready = os.path.exists(os.path.join(classic_td3_dir, "finale_nltk.txt"))
 
-# Check if vectorstore exists without initializing RAGVectorStore (which requires API Key)
-sqlite_file = os.path.join(rag_persist_dir, "chroma.sqlite3")
-rag_ready = os.path.exists(sqlite_file) or (os.path.exists(rag_persist_dir) and len(os.listdir(rag_persist_dir)) > 0)
+# Check if vectorstore exists and is non-empty without initializing RAGVectorStore (which requires API Key)
+def is_rag_ready(persist_dir: str) -> bool:
+    sqlite_file = os.path.join(persist_dir, "chroma.sqlite3")
+    if not os.path.exists(sqlite_file):
+        return False
+    try:
+        import sqlite3
+        conn = sqlite3.connect(sqlite_file)
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM embeddings;")
+        count = cursor.fetchone()[0]
+        conn.close()
+        return count > 0
+    except Exception:
+        return False
 
-# Only block the UI if classic or rag is not ready.
-if not classic_ready or not rag_ready:
+rag_ready = is_rag_ready(rag_persist_dir)
+
+# Check selection screen
+available_books = []
+if os.path.exists(pdf_dir):
+    available_books = sorted([f for f in os.listdir(pdf_dir) if f.endswith('.pdf')])
+
+if not st.session_state["selection_confirmed"]:
+    if len(available_books) == 0:
+        st.error("❌ Aucun livre PDF trouvé dans le dossier `data/input/`. Veuillez placer les fichiers PDF de Harry Potter dans ce dossier avant de continuer.")
+        st.stop()
+        
     st.markdown("""
-    <div style='text-align: center; margin-top: 50px; margin-bottom: 30px;'>
+    <div style='text-align: center; margin-top: 30px; margin-bottom: 20px;'>
+        <h1 style='font-size: 2.8rem; margin-bottom: 10px;'>📚 Sélection des Livres</h1>
+        <p style='font-size: 1.1rem; color: #94a3b8;'>Sélectionnez les livres de Harry Potter à inclure dans la base de données. Plus vous en choisissez, plus l'indexation RAG prendra du temps et consommera de requêtes d'API Gemini.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Checkbox selection
+    chosen_books = []
+    st.write("### Livres disponibles dans `data/input` :")
+    for book in available_books:
+        book_num = detect_book_num(book)
+        clean_name = book
+        if book_num and book_num in HP_METADATA:
+            clean_name = f"Harry Potter {book_num} : {HP_METADATA[book_num]['rubric'].title()}"
+        
+        default_val = True
+        if st.session_state["selected_books"]:
+            default_val = book in st.session_state["selected_books"]
+            
+        if st.checkbox(clean_name, value=default_val, key=f"select_{book}"):
+            chosen_books.append(book)
+            
+    st.markdown("---")
+    if not chosen_books:
+        st.warning("⚠️ Veuillez sélectionner au moins un livre.")
+    else:
+        if st.button("🪄 Confirmer la Sélection et Indexer", use_container_width=True):
+            st.session_state["selected_books"] = chosen_books
+            st.session_state["selection_confirmed"] = True
+            
+            # Check if selection changed
+            currently_indexed = get_indexed_books()
+            if set(chosen_books) != set(currently_indexed):
+                # Force re-indexing
+                try:
+                    import shutil
+                    for d in [os.path.join(PROJECT_ROOT, "data", "output", "TD1"), 
+                              os.path.join(PROJECT_ROOT, "data", "output", "TD2"), 
+                              classic_td3_dir]:
+                        if os.path.exists(d):
+                            shutil.rmtree(d)
+                except Exception:
+                    pass
+                try:
+                    import shutil
+                    if os.path.exists(rag_persist_dir):
+                        shutil.rmtree(rag_persist_dir)
+                        os.makedirs(rag_persist_dir, exist_ok=True)
+                except Exception:
+                    pass
+            st.rerun()
+    st.stop()
+
+# Only block the UI if classic or rag is not ready, and RAG bypass is not active.
+if not classic_ready or (not rag_ready and not st.session_state.get("rag_failed_bypass")):
+    st.markdown("""
+    <div style='text-align: center; margin-top: 30px; margin-bottom: 20px;'>
         <h1 style='font-size: 3rem; margin-bottom: 10px;'>🪄 Configuration Initiale</h1>
         <p style='font-size: 1.2rem; color: #94a3b8;'>Bienvenue ! Avant de pouvoir utiliser le Hub LO17 & RAG, nous devons générer les index et les bases de données.</p>
+    </div>
+    
+    <style>
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.8; }
+        50% { transform: scale(1.02); opacity: 1; }
+    }
+    .loading-card {
+        background: linear-gradient(135deg, rgba(30, 41, 59, 0.6) 0%, rgba(13, 6, 40, 0.6) 100%);
+        padding: 25px;
+        border-radius: 16px;
+        border: 1px solid rgba(138, 43, 226, 0.2);
+        text-align: center;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        margin-bottom: 25px;
+        animation: pulse 2s infinite ease-in-out;
+    }
+    .magic-spinner {
+        border: 4px solid rgba(255, 255, 255, 0.05);
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        border-left-color: #ffeb99; /* Gold */
+        border-top-color: #8a2be2; /* Purple */
+        animation: spin 1s linear infinite;
+        margin: 15px auto;
+        box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+    }
+    </style>
+    <div class="loading-card">
+        <div class="magic-spinner"></div>
+        <p style='font-size: 1.05rem; color: #b0a5cf; margin-top: 8px;'>
+            ✨ Les forces magiques de l'indexation s'activent en arrière-plan...
+        </p>
     </div>
     """, unsafe_allow_html=True)
             
@@ -234,27 +392,43 @@ if not classic_ready or not rag_ready:
             os.makedirs(td2_dir, exist_ok=True)
             os.makedirs(td3_dir, exist_ok=True)
             
-            log_container.info("Phase 1/4 : Parsing des livres PDF vers XML...")
-            parser = PDFCorpusParser(os.path.join(base_dir, "data/input"))
-            parser.parse()
-            parser.save(xml_raw_path)
+            if not os.path.exists(xml_raw_path):
+                log_container.info("Phase 1/4 : Parsing des livres PDF vers XML...")
+                parser = PDFCorpusParser(os.path.join(base_dir, "data/input"), selected_files=st.session_state["selected_books"])
+                parser.parse()
+                parser.save(xml_raw_path)
+            else:
+                log_container.info("Phase 1/4 : Fichier XML brut trouvé, parsing ignoré.")
             
             progress_bar.progress(15)
-            log_container.info("Phase 2/4 : Tokenisation et filtrage des mots vides...")
-            tokenizer = Tokenizer(xml_filepath=xml_raw_path, output_dir=td2_dir)
-            tokenizer.export_stats()
+            
+            if not os.path.exists(xml_filtered_path):
+                log_container.info("Phase 2/4 : Tokenisation et filtrage des mots vides...")
+                tokenizer = Tokenizer(xml_filepath=xml_raw_path, output_dir=td2_dir)
+                tokenizer.export_stats()
+            else:
+                log_container.info("Phase 2/4 : Fichier XML filtré trouvé, tokenisation ignorée.")
             
             progress_bar.progress(30)
-            log_container.info("Phase 3/4 : Racinisation (Stemming) avec NLTK...")
-            stemmer_engine = Stemmer(xml_filtered_path, stem_mapping_path)
-            stemmer_engine.run()
-            tokenizer.export_stem_stats(stem_dict_file=stem_mapping_path, target_xml=xml_filtered_path, out_file=tfidf_path, filter_again=True)
+            
+            if not os.path.exists(stem_mapping_path) or not os.path.exists(tfidf_path):
+                log_container.info("Phase 3/4 : Racinisation (Stemming) avec NLTK...")
+                stemmer_engine = Stemmer(xml_filtered_path, stem_mapping_path)
+                stemmer_engine.run()
+                tokenizer = Tokenizer(xml_filepath=xml_raw_path, output_dir=td2_dir)
+                tokenizer.export_stem_stats(stem_dict_file=stem_mapping_path, target_xml=xml_filtered_path, out_file=tfidf_path, filter_again=True)
+            else:
+                log_container.info("Phase 3/4 : Fichiers Stem et TF-IDF trouvés, stemming ignoré.")
             
             progress_bar.progress(45)
-            log_container.info("Phase 4/4 : Génération de l'index inversé et des poids TF-IDF...")
-            index_gen = InvertedIndexGenerator(xml_filepath=xml_final_path, output_dir=td3_dir)
-            index_gen.generate()
-            index_gen.export()
+            
+            if not os.path.exists(os.path.join(td3_dir, "inverse_text.txt")):
+                log_container.info("Phase 4/4 : Génération de l'index inversé et des poids TF-IDF...")
+                index_gen = InvertedIndexGenerator(xml_filepath=xml_final_path, output_dir=td3_dir)
+                index_gen.generate()
+                index_gen.export()
+            else:
+                log_container.info("Phase 4/4 : Index inversé trouvé, génération finale ignorée.")
         except Exception as e:
             st.error(f"Erreur d'indexation classique : {e}")
             st.stop()
@@ -263,25 +437,38 @@ if not classic_ready or not rag_ready:
     
     if not rag_ready:
         if not st.session_state.get("google_api_key"):
-            log_container.warning("⚠️ La génération de la base vectorielle ChromaDB nécessite une clé API Gemini.")
-            key_input = st.text_input("Veuillez saisir votre GOOGLE_API_KEY :", type="password", help="Cette clé est requise pour créer les embeddings.")
-            if key_input:
-                st.session_state["google_api_key"] = key_input
-                os.environ["GOOGLE_API_KEY"] = key_input
-                st.rerun()
-            else:
-                st.stop()
+            log_container.warning("⚠️ L'assistant IA RAG nécessite une clé API Google Gemini pour pouvoir formuler des réponses.")
+            col_key, col_bypass = st.columns([3, 2])
+            with col_key:
+                key_input = st.text_input("Veuillez saisir votre GOOGLE_API_KEY :", type="password", help="Cette clé est requise pour la génération de texte par l'IA.", key="init_api_key")
+                if key_input:
+                    st.session_state["google_api_key"] = key_input
+                    os.environ["GOOGLE_API_KEY"] = key_input
+                    st.rerun()
+            with col_bypass:
+                st.markdown("<div style='height: 28px;'></div>", unsafe_allow_html=True)
+                if st.button("👉 Accéder uniquement au Moteur Classique (sans RAG)", use_container_width=True):
+                    st.session_state["rag_error"] = "Aucune clé API fournie. L'initialisation du RAG a été ignorée par l'utilisateur."
+                    st.session_state["rag_failed_bypass"] = True
+                    st.rerun()
+            st.stop()
                 
-        log_container.info("Phase RAG : Génération de la base de données vectorielle ChromaDB (cela peut prendre quelques minutes)...")
+        log_container.info("Phase RAG : Génération de la base de données vectorielle locale via HuggingFace (cela peut prendre quelques minutes)...")
         try:
             vstore_mgr = RAGVectorStore(persist_dir=rag_persist_dir)
-            loader = PDFBookLoader(directory_path=pdf_dir)
+            loader = PDFBookLoader(directory_path=pdf_dir, selected_files=st.session_state["selected_books"])
             chunks = loader.load_and_split(st_logger=log_container.info)
             vstore_mgr.create_store(chunks, st_logger=log_container.info)
         except Exception as e:
-            st.error(f"Erreur d'indexation RAG : {e}")
-            st.stop()
+            st.session_state["rag_error"] = str(e)
+            st.session_state["rag_failed_bypass"] = True
+            log_container.error(f"Erreur d'indexation RAG : {e}")
+            st.warning("⚠️ L'initialisation du RAG a échoué. Redirection vers l'interface en mode limité dans 5 secondes...")
+            import time
+            time.sleep(5)
+            st.rerun()
             
+    save_indexed_books(st.session_state["selected_books"])
     progress_bar.progress(100)
     log_container.success("Initialisation terminée ! Démarrage de l'interface...")
     import time
@@ -293,6 +480,10 @@ if not classic_ready or not rag_ready:
 with st.sidebar:
     st.image("https://img.icons8.com/color/96/harry-potter.png", width=64)
     st.title("Hub Configuration")
+    
+    # Navigation
+    app_mode = st.radio("Navigation", options=["🧙 Assistant RAG", "🔍 Recherche Classique"])
+    st.markdown("---")
     
     # API Key Input
     api_key = st.text_input(
@@ -313,9 +504,15 @@ with st.sidebar:
     st.subheader("RAG Parameters")
     rag_model = st.selectbox(
         "Gemini Model",
-        options=["gemini-3.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"],
+        options=[
+            "gemini-3.1-flash-lite",
+            "gemini-3.5-flash",
+            "gemini-3-flash",
+            "gemini-2.5-flash",
+            "gemini-2.5-flash-lite"
+        ],
         index=0,
-        help="Sélectionnez le modèle LLM à utiliser pour la génération."
+        help="Sélectionnez le modèle LLM. Note : 'gemini-3.1-flash-lite' offre la limite gratuite la plus élevée (15 RPM / 500 RPD)."
     )
     temperature = st.slider(
         "Temperature",
@@ -327,124 +524,134 @@ with st.sidebar:
     )
     
     st.markdown("---")
+    st.subheader("Database Scope")
+    num_selected = len(st.session_state.get("selected_books", []))
+    st.markdown(f"📚 **{num_selected}** livre{'s' if num_selected != 1 else ''} sélectionné{'s' if num_selected != 1 else ''}")
+    if st.button("⚙️ Modifier la sélection", key="sidebar_change_selection", use_container_width=True):
+        st.session_state["selection_confirmed"] = False
+        st.rerun()
+    
+    if st.session_state.get("rag_error"):
+        st.markdown("---")
+        st.error("⚠️ Assistant RAG désactivé")
+        st.caption(f"**Erreur :** {st.session_state['rag_error']}")
+        if st.button("🔄 Réessayer l'initialisation", key="sidebar_retry_rag", use_container_width=True):
+            st.session_state["rag_error"] = None
+            st.session_state["rag_failed_bypass"] = False
+            st.rerun()
+
+    st.markdown("---")
     st.markdown("""
     **Projet UTC LO17 / AI31**  
     *Printemps 2026*  
     Moteur classique de recherche & Système RAG sur les livres de Harry Potter.
     """)
 
-# ----------------- MAIN TITLE HEADER -----------------
-
-st.markdown("""
-<div class="header-container">
-    <h1 class="header-title">🪄 LO17 & RAG Intelligence Hub</h1>
-    <p class="header-subtitle">Plateforme intégrée d'Indexation, de Recherche Booléenne et de Génération Augmentée par Récupération</p>
-</div>
-""", unsafe_allow_html=True)
-
-# Define main navigation tabs
-tab_rag, tab_classic = st.tabs(["🧙 Assistant RAG (Harry Potter)", "🔍 Moteur de Recherche Classique (Harry Potter)"])
-
-
 # =====================================================================
 # TAB 1: ASSISTANT RAG (HARRY POTTER)
 # =====================================================================
 
-with tab_rag:
-    st.subheader("Système RAG sur le corpus de Harry Potter")
-    st.write("Posez des questions sur le monde de Harry Potter en français. Le système ira chercher les sections pertinentes dans les livres originaux PDF et utilisera l'API Gemini pour générer des réponses fidèles, tout en vérifiant l'absence d'hallucinations.")
-    
-    if not st.session_state["google_api_key"]:
+if app_mode == "🧙 Assistant RAG":
+    if st.session_state.get("rag_error"):
+        st.error(f"""
+        ⚠️ **L'Assistant RAG est actuellement indisponible.**
+        
+        **Détail de l'erreur rencontré :**
+        `{st.session_state['rag_error']}`
+        
+        L'initialisation de la base vectorielle ChromaDB a échoué (limite de quota d'API Gemini dépassée 429, clé invalide ou erreur réseau).
+        """)
+        
+        st.info("💡 Vous pouvez continuer à utiliser l'onglet **Moteur de Recherche Classique** pour interroger les livres de Harry Potter sans clé API.")
+        
+        if st.button("🔄 Réinitialiser et réessayer l'indexation RAG", key="tab_retry_rag"):
+            st.session_state["rag_error"] = None
+            st.session_state["rag_failed_bypass"] = False
+            st.rerun()
+    elif not st.session_state["google_api_key"]:
         st.warning("⚠️ Clé API Gemini manquante. Veuillez saisir votre GOOGLE_API_KEY dans la barre latérale pour activer le RAG.")
     else:
         # Vectorstore is already guaranteed to exist by global check
-        with st.spinner("Chargement de la base vectorielle..."):
-            vstore_mgr = RAGVectorStore(persist_dir=rag_persist_dir)
+        @st.cache_resource(show_spinner="Chargement de la base vectorielle...")
+        def get_rag_components(persist_dir, model_name, temp):
+            vstore_mgr = RAGVectorStore(persist_dir=persist_dir)
             vstore = vstore_mgr.load_store()
-            rag_chain = HarryPotterRAGChain(vectorstore=vstore, model_name=rag_model, temperature=temperature)
-            evaluator = RAGEvaluator(model_name=rag_model)
+            chain = HarryPotterRAGChain(vectorstore=vstore, model_name=model_name, temperature=temp)
+            _evaluator = RAGEvaluator(model_name=model_name)
+            return chain, _evaluator
+
+        rag_chain, evaluator = get_rag_components(rag_persist_dir, rag_model, temperature)
             
         # Chat history interface
         if "messages" not in st.session_state:
-            st.session_state.messages = []
+            st.session_state.messages = [{"role": "assistant", "content": "Bonjour ! Je suis votre assistant expert sur l'univers de Harry Potter. Que souhaitez-vous savoir ?"}]
             
         # Render chat history
         for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
+            avatar = "🧑‍💻" if message["role"] == "user" else "✨"
+            with st.chat_message(message["role"], avatar=avatar):
                 st.markdown(message["content"])
-                if "sources" in message:
-                    with st.expander("📖 Sources de contexte récupérées"):
-                        for idx, doc in enumerate(message["sources"], 1):
-                            src_name = os.path.basename(doc.metadata.get('source', 'Inconnu'))
-                            page = doc.metadata.get('page', 'Inconnue')
-                            st.markdown(f"**Source {idx}** | Livre: `{src_name}`, Page: `{page}`")
-                            st.code(doc.page_content, language="text")
-                if "evaluation" in message:
-                    eval_data = message["evaluation"]
-                    with st.expander("🛡️ Audit de Génération (Anti-Hallucination & Pertinence)"):
-                        col_e1, col_e2 = st.columns(2)
-                        with col_e1:
-                            st.write("**Fidélité au Contexte (Faithfulness)**")
-                            f_score = eval_data["faithfulness"].get("score", 0.0)
-                            if f_score >= 0.8:
-                                st.success(f"Score: {f_score:.2f} ({eval_data['faithfulness'].get('verdict', 'FIDELE')})")
-                            else:
-                                st.warning(f"Score: {f_score:.2f} ({eval_data['faithfulness'].get('verdict', 'HALLUCINATION')})")
-                            st.write(f"*Justification:* {eval_data['faithfulness'].get('justification', '')}")
-                        with col_e2:
-                            st.write("**Pertinence de la Réponse**")
-                            r_score = eval_data["relevance"].get("score", 0.0)
-                            if r_score >= 0.8:
-                                st.success(f"Score: {r_score:.2f}")
-                            else:
-                                st.warning(f"Score: {r_score:.2f}")
-                            st.write(f"*Justification:* {eval_data['relevance'].get('justification', '')}")
+                
+                # Small columns for metadata if they exist
+                if "sources" in message or "evaluation" in message:
+                    col1, col2 = st.columns(2)
+                    if "sources" in message:
+                        with col1:
+                            with st.expander("📚 Sources récupérées"):
+                                for idx, doc in enumerate(message["sources"], 1):
+                                    src_name = os.path.basename(doc.metadata.get('source', 'Inconnu'))
+                                    page = doc.metadata.get('page', 'Inconnue')
+                                    st.markdown(f"**Source {idx}** | `{src_name}` (p. {page})")
+                                    st.caption(doc.page_content[:200] + "...")
+                                    
+                    if "evaluation" in message:
+                        eval_data = message["evaluation"]
+                        f_score = eval_data["faithfulness"].get("score", 0.0)
+                        r_score = eval_data["relevance"].get("score", 0.0)
+                        icon = "🟢" if f_score >= 0.8 and r_score >= 0.8 else ("🟡" if f_score >= 0.5 and r_score >= 0.5 else "🔴")
+                        with col2:
+                            with st.expander(f"{icon} Audit IA (Fidélité: {f_score:.2f})"):
+                                st.write("**Fidélité au Contexte**")
+                                st.caption(eval_data['faithfulness'].get('justification', ''))
+                                st.write("**Pertinence**")
+                                st.caption(eval_data['relevance'].get('justification', ''))
                             
         # Prompt Input
-        if prompt := st.chat_input("Posez votre question (ex: 'Qui est Rogue ?' ou 'Quel est le premier sortilège appris par Harry ?')"):
-            # Display user message
-            with st.chat_message("user"):
-                st.markdown(prompt)
+        if prompt := st.chat_input("Posez votre question (ex: 'Quelle est la maison de Draco Malfoy ?' ou 'Comment s'appelle le chat de Hermione ?')"):
             st.session_state.messages.append({"role": "user", "content": prompt})
+            with st.chat_message("user", avatar="🧑‍💻"):
+                st.markdown(prompt)
             
-            # Generate response
-            with st.chat_message("assistant"):
-                with st.spinner("Recherche et génération de la réponse..."):
+            with st.chat_message("assistant", avatar="✨"):
+                with st.spinner("Analyse des grimoires en cours..."):
                     response_data = rag_chain.query(prompt)
                     answer = response_data["answer"]
                     sources = response_data["source_documents"]
                     
                     st.markdown(answer)
                     
-                    with st.expander("📖 Sources de contexte récupérées"):
-                        for idx, doc in enumerate(sources, 1):
-                            src_name = os.path.basename(doc.metadata.get('source', 'Inconnu'))
-                            page = doc.metadata.get('page', 'Inconnue')
-                            st.markdown(f"**Source {idx}** | Livre: `{src_name}`, Page: `{page}`")
-                            st.code(doc.page_content, language="text")
-                            
                     # Run evaluation
-                    with st.spinner("Audit anti-hallucination en cours..."):
+                    with st.spinner("Vérification anti-hallucination..."):
                         eval_res = evaluator.evaluate(prompt, answer, sources)
                         
-                    with st.expander("🛡️ Audit de Génération (Anti-Hallucination & Pertinence)"):
-                        col_e1, col_e2 = st.columns(2)
-                        with col_e1:
-                            st.write("**Fidélité au Contexte (Faithfulness)**")
-                            f_score = eval_res["faithfulness"].get("score", 0.0)
-                            if f_score >= 0.8:
-                                st.success(f"Score: {f_score:.2f} ({eval_res['faithfulness'].get('verdict', 'FIDELE')})")
-                            else:
-                                st.warning(f"Score: {f_score:.2f} ({eval_res['faithfulness'].get('verdict', 'HALLUCINATION')})")
-                            st.write(f"*Justification:* {eval_res['faithfulness'].get('justification', '')}")
-                        with col_e2:
-                            st.write("**Pertinence de la Réponse**")
-                            r_score = eval_res["relevance"].get("score", 0.0)
-                            if r_score >= 0.8:
-                                st.success(f"Score: {r_score:.2f}")
-                            else:
-                                st.warning(f"Score: {r_score:.2f}")
-                            st.write(f"*Justification:* {eval_res['relevance'].get('justification', '')}")
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        with st.expander("📚 Sources récupérées"):
+                            for idx, doc in enumerate(sources, 1):
+                                src_name = os.path.basename(doc.metadata.get('source', 'Inconnu'))
+                                page = doc.metadata.get('page', 'Inconnue')
+                                st.markdown(f"**Source {idx}** | `{src_name}` (p. {page})")
+                                st.caption(doc.page_content[:200] + "...")
+                                
+                    with col2:
+                        f_score = eval_res["faithfulness"].get("score", 0.0)
+                        r_score = eval_res["relevance"].get("score", 0.0)
+                        icon = "🟢" if f_score >= 0.8 and r_score >= 0.8 else ("🟡" if f_score >= 0.5 and r_score >= 0.5 else "🔴")
+                        with st.expander(f"{icon} Audit IA (Fidélité: {f_score:.2f})"):
+                            st.write("**Fidélité au Contexte**")
+                            st.caption(eval_res['faithfulness'].get('justification', ''))
+                            st.write("**Pertinence**")
+                            st.caption(eval_res['relevance'].get('justification', ''))
             
             # Save to history
             st.session_state.messages.append({
@@ -458,7 +665,7 @@ with tab_rag:
 # TAB 2: MOTEUR DE RECHERCHE CLASSIQUE (HARRY POTTER)
 # =====================================================================
 
-with tab_classic:
+elif app_mode == "🔍 Recherche Classique":
     st.subheader("Recherche Classique LO17 sur Harry Potter")
     st.write("Interrogez le moteur de recherche classique LO17 adapté aux livres de Harry Potter (indexation inversée, équations booléennes, correction orthographique et scoring de pertinence).")
     

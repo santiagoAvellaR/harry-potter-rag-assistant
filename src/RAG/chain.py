@@ -11,7 +11,9 @@ from langchain_core.documents import Document
 DEFAULT_PROMPT_TEMPLATE = """Vous êtes un assistant expert de l'univers de Harry Potter.
 Utilisez les extraits de texte suivants fournis comme contexte pour répondre à la question de l'utilisateur.
 Si vous ne connaissez pas la réponse ou si le contexte ne la contient pas, dites-le honnêtement ("Je ne sais pas"). Ne tentez pas d'inventer des faits.
-Répondez en français de manière claire et concise.
+Répondez en français de manière claire et concise. Il n'est pas nécessaire de dire "d'après les textes fournis" ou quoi que ce soit de ce genre, 
+répondez simplement directement à la ou aux questions.
+
 
 Question: {question}
 
@@ -23,7 +25,7 @@ Réponse:"""
 class HarryPotterRAGChain:
     """Configures and runs the generation chain for the Harry Potter RAG."""
     
-    def __init__(self, vectorstore, model_name: str = "gemini-3.5-flash", temperature: float = 0.2):
+    def __init__(self, vectorstore, model_name: str = "gemini-3.1-flash-lite", temperature: float = 0.2):
         self.vectorstore = vectorstore
         self.model_name = model_name
         self.temperature = temperature
@@ -37,8 +39,11 @@ class HarryPotterRAGChain:
         # Configure prompt template
         self.prompt = PromptTemplate.from_template(DEFAULT_PROMPT_TEMPLATE)
         
-        # Configure retriever interface (fetch top 4 relevant chunks by default)
-        self.retriever = self.vectorstore.as_retriever(search_kwargs={"k": 4})
+        # Configure retriever interface (use MMR for diversity and fetch top 12 relevant chunks)
+        self.retriever = self.vectorstore.as_retriever(
+            search_type="mmr",
+            search_kwargs={"k": 12, "fetch_k": 50}
+        )
         
         # Setup generation pipeline
         self.chain = (
