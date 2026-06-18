@@ -26,7 +26,8 @@ class RAGVectorStore:
         vectorstore = Chroma.from_documents(
             documents=documents,
             embedding=self.embeddings,
-            persist_directory=self.persist_dir
+            persist_directory=self.persist_dir,
+            collection_metadata={"hnsw:space": "cosine"}
         )
         
         msg2 = "✅ Vector store created and saved successfully."

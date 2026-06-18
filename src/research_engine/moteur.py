@@ -256,15 +256,37 @@ class SearchEngine:
         return (0, 0, 0)
 
     def _calculate_score(self, doc_id, keywords):
-        """Simple relevance scoring: 3*title_freq + 1*text_freq."""
+        """BM25-inspired relevance scoring combining TF saturation and IDF."""
         if not keywords: return 1.0
+        
+        import math
         score = 0
+        N = len(self.doc_titles) if self.doc_titles else 1
         title_index = self.indexes.get('title', {})
         text_index = self.indexes.get('text', {})
+        
         for kw in keywords:
             title_freq = title_index.get(kw, {}).get(doc_id, 0)
             text_freq = text_index.get(kw, {}).get(doc_id, 0)
-            score += (3 * title_freq) + text_freq
+            
+            # Document frequency
+            df_title = len(title_index.get(kw, {}))
+            df_text = len(text_index.get(kw, {}))
+            df = max(df_title, df_text)
+            
+            if df == 0: continue
+            
+            # IDF with smoothing
+            idf = math.log((N - df + 0.5) / (df + 0.5) + 1.0)
+            
+            # Raw term frequency weighted (Title has 3x weight)
+            raw_tf = (3 * title_freq) + text_freq
+            
+            # TF Saturation (k1 = 1.2, ignoring length normalization b for simplicity)
+            tf_saturated = (raw_tf * 2.2) / (raw_tf + 1.2)
+            
+            score += tf_saturated * idf
+            
         return score
 
     def _get_snippet(self, doc_id, highlight_keywords):

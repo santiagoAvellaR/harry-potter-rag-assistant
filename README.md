@@ -3,7 +3,7 @@
 Ce projet intègre de manière modulaire et interactive deux grands paradigmes de la recherche d'information :
 1. **Un Moteur de Recherche Classique (Booléen & Vectoriel)** : Développé dans le cadre des travaux dirigés (TDs 1 à 6) de l'unité d'enseignement **LO17** à l'UTC (Université de Technologie de Compiègne). Ce moteur a été entièrement adapté pour indexer, analyser et interroger l'intégralité des livres de la saga *Harry Potter*.
 2. **Un Assistant RAG (Retrieval-Augmented Generation) Hybride** : Un agent conversationnel intelligent qui s'appuie sur le framework **LangChain**. Contrairement aux approches cloud standard, ce projet utilise une approche **hybride locale/cloud** : 
-   - **Embeddings Locaux :** Génération des vecteurs hors ligne via `sentence-transformers` et `langchain-huggingface` (modèle `all-MiniLM-L6-v2`), garantissant rapidité, respect de la confidentialité et absence de limites de requêtes (rate limits).
+   - **Embeddings Locaux :** Génération des vecteurs hors ligne via `sentence-transformers` et `langchain-huggingface` (modèle `paraphrase-multilingual-MiniLM-L12-v2`), garantissant rapidité, respect de la confidentialité et absence de limites de requêtes (rate limits).
    - **Génération Cloud :** Les modèles de pointe **Google Gemini** (via l'API Gemini) sont sollicités uniquement pour la génération de la réponse finale basée sur le contexte récupéré dans la base vectorielle locale **ChromaDB**.
    - **Audit Anti-Hallucination :** Un module d'évaluation automatique des réponses ("LLM-as-a-judge") valide la pertinence et la fidélité de chaque réponse au contexte.
 
