@@ -23,12 +23,33 @@ Thumbs.db
 
 # --- Configuration & Secrets ---
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.token
+credentials*.json
+service-account*.json
 
 # --- Données du projet ---
-# Ignorer les PDF volumineux et soumis aux droits d'auteur
+# Ignore PDFs by default. The source novels and other copyrighted PDFs must not
+# be committed unless redistribution rights are explicitly verified.
+*.pdf
 data/input/*.pdf
 !data/input/.gitkeep
 
 # Ignorer tous les fichiers générés par les indexeurs et ChromaDB
 data/output/*
 !data/output/.gitkeep
+
+# Common local/vector database artifacts
+*.sqlite
+*.sqlite3
+*.db
+*.parquet
+*.npy
+*.npz
+*.pkl
+*.bin
+*.faiss
+*.index

@@ -1,127 +1,239 @@
-# 🪄 LO17 & RAG Intelligence Hub
+# RAG Assistant over a French Literary Corpus
 
-Ce projet intègre de manière modulaire et interactive deux grands paradigmes de la recherche d'information :
-1. **Un Moteur de Recherche Classique (Booléen & Vectoriel)** : Développé dans le cadre des travaux dirigés (TDs 1 à 6) de l'unité d'enseignement **LO17** à l'UTC (Université de Technologie de Compiègne). Ce moteur a été entièrement adapté pour indexer, analyser et interroger l'intégralité des livres de la saga *Harry Potter*.
-2. **Un Assistant RAG (Retrieval-Augmented Generation) Hybride** : Un agent conversationnel intelligent qui s'appuie sur le framework **LangChain**. Contrairement aux approches cloud standard, ce projet utilise une approche **hybride locale/cloud** : 
-   - **Embeddings Locaux :** Génération des vecteurs hors ligne via `sentence-transformers` et `langchain-huggingface` (modèle `paraphrase-multilingual-MiniLM-L12-v2`), garantissant rapidité, respect de la confidentialité et absence de limites de requêtes (rate limits).
-   - **Génération Cloud :** Les modèles de pointe **Google Gemini** (via l'API Gemini) sont sollicités uniquement pour la génération de la réponse finale basée sur le contexte récupéré dans la base vectorielle locale **ChromaDB**.
-   - **Audit Anti-Hallucination :** Un module d'évaluation automatique des réponses ("LLM-as-a-judge") valide la pertinence et la fidélité de chaque réponse au contexte.
+Academic Retrieval-Augmented Generation (RAG) and Information Retrieval project developed at the Université de Technologie de Compiègne in Spring 2026 by Santiago Avellaneda Rodriguez, Iago Rhudá Ramos, and Kenza Fadouache.
 
-L'ensemble du projet est piloté par une interface utilisateur unifiée, dynamique et élégante développée avec **Streamlit**, offrant des visualisations de logs en temps réel, un tableau de bord d'audit des réponses, une sélection personnalisée de livres, et un processus d'initialisation transparent et résilient.
+The project combines semantic retrieval over a long French literary corpus with grounded answer generation through the Gemini API. It does not train, fine-tune, or redistribute a language model. The embeddings are produced locally with a pretrained multilingual sentence-transformer, while Gemini is used as an external generation and evaluation service.
 
----
+Important: the Harry Potter novels are not distributed with the public repository. Users must provide their own legally obtained source PDFs.
 
-## 📂 Structure du Projet
+## Project Overview
 
-L'organisation des répertoires a été conçue pour séparer proprement le code source, les données d'entrée, les fichiers d'indexation générés et l'interface utilisateur.
+The application answers questions over the seven French Harry Potter novels. This is a harder retrieval setting than short encyclopedic documents because relevant information in narrative text can span multiple passages, depend on small details, be split by chunk boundaries, or fail to rank among the top retrieved chunks.
 
-```text
-RAG/
-├── .env.example               # Modèle de configuration des variables d'environnement (ex: GOOGLE_API_KEY)
-├── environment.yml            # Fichier de configuration de l'environnement virtuel Conda (unifié)
-├── requirements.txt           # Dépendances Python pour une installation via pip
-├── app.py                     # Point d'entrée de l'application web Streamlit (Hub intégré)
-├── data/
-│   ├── input/                 # Contient les documents PDF originaux (Livres de Harry Potter)
-│   └── output/                # Fichiers de sortie générés automatiquement par les pipelines
-│       ├── TD1/, TD2/, TD3/   # Fichiers XML, dictionnaires et index inversés du moteur classique
-│       ├── evaluation/        # Données et statistiques d'évaluation
-│       ├── selected_books.json# Fichier de persistance pour les livres sélectionnés par l'utilisateur
-│       └── vectorstore_local/ # Fichiers de la base de données vectorielle ChromaDB avec embeddings locaux
-└── src/                       # Code source de l'application
-    ├── research_engine/       # Composants du moteur de recherche classique LO17
-    │   ├── pdf_corpus_parser.py  # Extraction de texte des PDF vers XML (supporte le filtrage de livres)
-    │   ├── tokenizer.py          # Tokenisation et filtrage
-    │   ├── stemmer.py            # Racinisation (stemming) en français (NLTK)
-    │   ├── xml_builder.py        # Outils de manipulation de fichiers XML
-    │   ├── inverted_index.py     # Construction de l'index inversé
-    │   ├── moteur.py             # Moteur de recherche et exécution des requêtes booléennes
-    │   ├── spell_checker.py      # Suggestion et correction orthographique (Levenshtein)
-    │   └── ...
-    ├── RAG/                   # Composants du pipeline de génération augmentée (RAG)
-    │   ├── loader_pdf.py      # Chargement et découpage intelligent (chunking) des livres PDF filtrés
-    │   ├── vectorstore.py     # Génération des embeddings (HuggingFace) et persistance avec ChromaDB
-    │   ├── chain.py           # Orchestration de la chaîne RAG avec LangChain et l'API Gemini
-    │   └── evaluation.py      # Audit de fidélité et pertinence ("LLM-as-a-judge")
-    └── search_adapters/       # Adaptateurs pour la communication entre le backend classique et l'UI
+The repository contains two complementary paths:
+
+- RAG / semantic retrieval path: PDF loading, chunking, multilingual embeddings, ChromaDB retrieval, MMR diversification, Gemini generation, source display, and LLM-based faithfulness/relevance auditing.
+- Classical Information Retrieval path: PDF-to-XML processing, tokenization, stopword handling, French stemming, inverted indexes, Boolean and metadata queries, BM25-inspired ranking, and Levenshtein spell correction.
+
+The classical search engine originated from previous LO17 TD/course work and was adapted/integrated into this final application. It is a complementary baseline/search tab, not a newly invented component built entirely from scratch for the final RAG project.
+
+## Architecture
+
+```mermaid
+flowchart LR
+    A[User-provided PDFs] --> B[PDF loader]
+    B --> C[RecursiveCharacterTextSplitter]
+    C --> D[Local multilingual embeddings]
+    D --> E[Persistent ChromaDB]
+    E --> F[MMR retriever]
+    F --> G[Retrieved context + source metadata]
+    G --> H[Gemini generation]
+    H --> I[Answer + visible sources]
+    I --> J[LLM-based faithfulness / relevance audit]
 ```
 
----
+The application is served through Streamlit (`app.py`). At startup, it can build both the classical indexes and the RAG vector database from the PDFs present in `data/input/`.
 
-## 🛠️ Installation et Configuration
+The RAG and classical IR paths share the same local PDF corpus but are not fused in the current implementation: classical search results are not injected into the RAG prompt.
 
-### 1. Cloner le Projet
-Assurez-vous de disposer de l'intégralité des fichiers du projet sur votre machine locale.
+## RAG Pipeline
 
-### 2. Placer les Documents de Référence
-Déposez les fichiers PDF correspondant aux livres de *Harry Potter* dans le répertoire suivant :
-`data/input/` (les fichiers doivent être au format PDF, par exemple `HP1.pdf`, `HP2.pdf`, etc.).
+Verified implementation details:
 
-### 3. Créer l'Environnement Virtuel
+- PDF loading with `PyPDFLoader` in `src/RAG/loader_pdf.py`.
+- Chunking with `RecursiveCharacterTextSplitter`.
+- Local embeddings with `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2` through `langchain-huggingface`.
+- Persistent ChromaDB vector storage in cosine space.
+- MMR retrieval through LangChain's Chroma retriever.
+- Prompt construction that includes source name and page metadata for each retrieved chunk.
+- Gemini generation through `ChatGoogleGenerativeAI`.
+- Streamlit display of retrieved source snippets.
+- LLM-as-a-judge audit for faithfulness to retrieved context and answer relevance.
 
-#### Option A : Avec Anaconda / Miniconda (Recommandé)
-Créez et configurez l'environnement à l'aide du fichier de configuration unifié `environment.yml` :
+The default generation temperature in code is `0.2`, and the Streamlit sidebar lets the user choose among configured Gemini model names and adjust temperature.
+
+## Retrieval Configuration
+
+The retained configuration in the code/report is:
+
+- Chunk size: `2500` characters
+- Chunk overlap: `500` characters
+- Embedding model: `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`
+- Vector store: ChromaDB with cosine space
+- Retrieval: MMR (`search_type="mmr"`)
+- `k = 12`
+- `fetch_k = 50`
+
+MMR was used to reduce redundant retrieved passages and improve diversity among candidate chunks. Several chunking/retrieval configurations were tried, and this setup was retained because it worked best overall in qualitative testing. This is not a benchmarked accuracy result.
+
+## Corpus
+
+The final report records the following corpus inspection figures:
+
+- 7 French novels
+- 2,709 PDF pages inspected
+- 2,697 pages with extractable text
+- Approximately 7.24 million characters
+
+The novels themselves must not be published in this repository unless redistribution rights are explicitly verified. Users must place their own legally obtained PDFs in `data/input/` before running the app.
+
+Persisted ChromaDB indexes and generated XML/index files may contain derived representations or extracted text from the novels. They should also be reviewed carefully and normally excluded from a public repository.
+
+## Evaluation
+
+What exists:
+
+- Retrieved source chunks are shown to the user.
+- The team performed qualitative testing across several chunking/retrieval configurations.
+- `src/RAG/evaluation.py` implements an LLM-as-a-judge audit for faithfulness and answer relevance.
+- `src/research_engine/evaluation.py` contains an experimental classical-IR evaluation script, but its manually curated ground truth is incomplete unless an external `ground_truth.json` is provided.
+
+What does not exist:
+
+- No human-labelled RAG benchmark is included.
+- No validated numeric RAG accuracy, retrieval accuracy, or faithfulness percentage is established.
+- The LLM-judge scores shown in the Streamlit UI are runtime diagnostic signals, not defensible benchmark performance metrics.
+
+The final system worked end-to-end in practical tests, but exact or very broad narrative questions can still fail when useful information is split across chunks or does not rank highly enough.
+
+## Retrieval Experiments and Key Learning
+
+The main engineering lesson was that RAG quality was often limited by retrieval rather than generation. When the right passages were retrieved, Gemini could usually produce a coherent answer. Failures were often caused by missing, overly broad, or poorly ranked context.
+
+Observed retrieval challenges included:
+
+- Fixed-size chunk boundaries splitting narrative details.
+- Redundant passages when using pure similarity retrieval.
+- Exact questions depending on rare details or names.
+- Broad questions requiring context from several distant passages.
+- Long-form novels being harder to retrieve from than short, self-contained documents.
+
+The final report notes that the team was congratulated during the oral presentation for its use of MMR; this should be understood as presentation feedback, not as an award or quantitative validation.
+
+## Classical Information Retrieval
+
+The complementary classical engine is located under `src/research_engine/` and exposed to the Streamlit UI through `src/search_adapters/search_bridge.py`.
+
+Verified components include:
+
+- PDF parsing into a structured XML corpus.
+- Tokenization and stopword handling.
+- French stemming with NLTK Snowball stemming.
+- TF, DF, and IDF-related statistics.
+- Inverted indexes by fields such as text, date, author, and rubric.
+- Boolean query handling and metadata/date filters.
+- BM25-inspired ranking with TF saturation and IDF smoothing.
+- Levenshtein-based spelling correction over the generated lexicon.
+
+This engine is useful for exact or structured search and as a fallback when the Gemini-backed RAG path is unavailable.
+
+## Tech Stack
+
+- Python
+- Streamlit
+- LangChain
+- ChromaDB
+- Hugging Face / sentence-transformers
+- Google Gemini API (`langchain-google-genai`)
+- `pypdf`
+- NLTK
+- `lxml`
+- NumPy / Matplotlib for classical IR evaluation utilities
+
+## Repository Structure
+
+```text
+.
+├── app.py                         # Streamlit application entry point
+├── src/
+│   ├── RAG/                       # PDF loading, vectorstore, RAG chain, LLM-based audit
+│   ├── research_engine/           # Classical LO17 information retrieval engine
+│   └── search_adapters/           # Adapter between Streamlit and classical engine
+├── data/
+│   ├── input/                     # User-provided PDFs; should not contain public copyrighted PDFs
+│   └── output/                    # Generated XML, indexes, vectorstores, evaluation outputs
+├── requirements.txt               # pip dependency list
+├── environment.yml                # Conda environment file; see installation note below
+├── .env.example                   # Example Gemini API key configuration
+└── README.md
+```
+
+## Installation
+
+Python 3.11 is used in `environment.yml`.
+
+Recommended pip setup:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Conda setup from the existing environment file:
+
 ```bash
 conda env create -f environment.yml
 conda activate rag
 ```
 
-#### Option B : Avec virtualenv et pip
-Si vous préférez utiliser l'outil standard `pip`, exécutez les commandes suivantes :
-```bash
-# Création et activation de l'environnement virtuel
-python -m venv .venv
-.venv\Scripts\activate  # Windows
-# source .venv/bin/activate  # macOS / Linux
+The Conda file mirrors the RAG runtime dependencies from `requirements.txt` through its `pip:` section.
 
-# Installation des dépendances
-pip install -r requirements.txt
-python -m spacy download fr_core_news_sm
-```
+## Configuration
 
-### 4. Configuration de l'API
-Copiez le fichier `.env.example` vers `.env` et ajoutez votre clé API Google Gemini :
+Gemini generation and LLM-based evaluation require a Google API key. Create a local `.env` file from `.env.example`:
+
 ```env
-GOOGLE_API_KEY="votre_clé_api_ici"
+GOOGLE_API_KEY=your_gemini_api_key_here
 ```
-*(Note : La clé API est uniquement utilisée pour la génération de texte, réduisant ainsi considérablement les risques de dépassement de quota (Rate Limit) puisque la lourde tâche d'embedding vectoriel est réalisée localement).*
 
----
+Never commit `.env` or real API keys. The app also allows entering the key through the Streamlit sidebar.
 
-## 🚀 Lancement de l'Application
+## Usage
 
-Pour lancer l'interface web interactive Streamlit :
+1. Place legally obtained source PDFs in `data/input/`.
+2. Configure `GOOGLE_API_KEY` if you want to use the RAG assistant.
+3. Start the Streamlit application:
 
 ```bash
 streamlit run app.py
 ```
 
-L'interface s'ouvrira automatiquement dans votre navigateur par défaut à l'adresse suivante : `http://localhost:8501`.
+On first launch, the app asks which available PDFs to index. It then builds the classical XML/index files and, if a Gemini API key is available, the local ChromaDB vector store.
 
-### Fonctionnalités de Démarrage Avancées
+If the RAG path fails because of a missing/invalid key, quota, or network issue, the classical search tab can still be used.
 
-1. **Sélection de Livres :** Lors du tout premier lancement, ou si la base est vide, une interface de sélection s'affiche. Elle vous permet de cocher spécifiquement quels livres vous souhaitez indexer parmi les PDF disponibles. Cela réduit le temps de calcul et vous permet de vous concentrer sur un sous-ensemble d'œuvres si désiré.
-2. **Processus d'Initialisation Dynamique :** Une fois les livres sélectionnés, un écran de chargement affiche les étapes d'initialisation en temps réel avec des animations :
-   - **Moteur Classique :** Parsing PDF vers XML, Tokenisation, Stemming, et création des Index inversés.
-   - **Assistant RAG :** Découpage du texte en chunks et génération des vecteurs 100% localement via `HuggingFace`. Les vecteurs sont ensuite stockés dans `ChromaDB`.
-3. **Résilience et Tolérance aux Pannes :** Si jamais la configuration de l'IA (RAG) rencontre un problème (par exemple : clé API invalide, absence de connexion internet), l'application ne plante pas ! Un mode dégradé s'active et vous permet d'accéder au **Moteur de Recherche Classique** tout en affichant un message explicatif clair sur la raison de l'indisponibilité du RAG.
+## Data and Copyright
 
----
+This repository should not publicly distribute copyrighted novels, extracted novel text, generated XML containing novel text, or persisted vector indexes derived from copyrighted text unless redistribution rights are explicitly verified.
 
-## 💻 Utilisation du Hub Streamlit
+Before publishing to GitHub, remove tracked copyrighted corpus files from Git and verify that generated outputs are not included. `.gitignore` helps prevent future accidental additions but does not remove files that are already tracked.
 
-L'interface est structurée en deux onglets principaux :
+## Limitations
 
-### 1. 🧙 Onglet : Assistant RAG (Harry Potter)
-Cet espace prend la forme d'un chatbot interactif intelligent.
-* **Questions Naturelles :** Posez des questions en français (ex: *"Qu'est-ce que l'Armée de Dumbledore ?"*). L'agent utilisera les vecteurs locaux pour trouver les passages pertinents, puis interrogera l'API Gemini pour rédiger une réponse cohérente.
-* **Transparence des Sources :** Pour chaque réponse, un panneau affiche les passages exacts récupérés dans les livres.
-* **Audit Anti-Hallucination :** Un score de **Fidélité (Faithfulness)** et de **Pertinence (Answer Relevance)** est généré pour chaque réponse, afin d'assurer que l'IA ne s'est pas inventé des détails en dehors des livres.
+- Academic prototype, not a production AI system.
+- No model training or fine-tuning.
+- No annotated RAG benchmark.
+- Retrieval settings were selected through qualitative testing, not a defensible quantitative benchmark.
+- Retrieval is sensitive to chunk boundaries and ranking.
+- Exact or broad narrative questions can fail when relevant passages are missing from the retrieved context.
+- External Gemini dependency for generation and LLM-based evaluation.
+- API quotas, connectivity, model availability, and prompt-following can affect results.
+- LLM-as-a-judge scores are diagnostic and can be biased, especially when using the same provider family for generation and evaluation.
+- The current RAG chain treats each question independently and does not pass conversation history to the model.
 
-### 2. 🔍 Onglet : Moteur de Recherche Classique (Harry Potter)
-Une adaptation visuelle du moteur de recherche TD (Traitement Documentaire).
-* **Requêtes Booléennes et Flexibles :** Cherchez des termes spécifiques en utilisant la syntaxe du moteur (incluant le traitement de l'orthographe via la distance de Levenshtein).
-* **Analyse et Logs :** Observez dans le terminal visuel intégré comment le moteur interprète votre requête, l'équation booléenne générée, et les calculs de pondération TF-IDF pour lister les résultats les plus pertinents.
+## Team and Contributions
 
----
-**Note de Développement :** Ce projet a été préparé pour être intégré à un dépôt Git professionnel (utilisation de `.gitignore` ciblant les données générées et clés sensibles) et intègre des bibliothèques robustes d'Intelligence Artificielle en Python (`langchain`, `sentence-transformers`, `chromadb`).
+Three-person UTC academic project, Spring 2026:
+
+- Santiago Avellaneda Rodriguez
+- Iago Rhudá Ramos
+- Kenza Fadouache
+
+The final report records equal overall participation among the three team members. Repository/code work was collaborative, and commits were made through Iago's university GitLab account, so Git commit authorship should not be used as an exclusive indicator of technical contribution.
+
+Santiago confirms direct collaborative work across the RAG pipeline, including PDF/document loading, chunking, embeddings, ChromaDB/vector retrieval, MMR retrieval, Gemini prompting/chain integration, Streamlit integration, and automated faithfulness/relevance evaluation.
+
+## Academic Context
+
+Université de Technologie de Compiègne, Spring 2026. The final report uses LO17-AI31 as the project context.
