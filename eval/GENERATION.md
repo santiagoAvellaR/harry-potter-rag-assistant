@@ -11,19 +11,22 @@ arguments or commit them:
 
 ```bash
 /home/santiago/anaconda3/envs/rag/bin/python -m unittest discover -s eval/tests -v
-/home/santiago/anaconda3/envs/rag/bin/python eval/run_generation.py
+/home/santiago/anaconda3/envs/rag/bin/python eval/run_generation.py --check-cache
+/home/santiago/anaconda3/envs/rag/bin/python eval/run_generation.py --smoke-question F01 --max-live-calls 2
+# Run the full cohort only after reviewing the smoke diagnostics:
+/home/santiago/anaconda3/envs/rag/bin/python eval/run_generation.py --run-full
 ```
 
 `generation_config.yaml` is separate from the frozen retrieval configuration.
-Missing credentials produce a blocked versioned result for all 45 questions,
-without importing the generation client or making API calls. Generator metadata
-access is checked against the configured ID; unavailable original generator or
-permission/quota failures halt rather than substituting a model. Different judge
-ID `gemini-2.5-flash` is explicitly configured, not automatically discovered or
-substituted. Its availability and exact API metadata are recorded when credentials
-permit. Metadata access does not guarantee subsequent generation quota. Actual
-response metadata (including resolved model version if supplied by the API) is
-retained; an unreported API version is not invented. Both models are from Google,
+No full run starts without explicit `--run-full`. Smoke mode requires a compatible
+cached answer and never retrieves or generates an answer. Missing credentials
+leave evaluations missing. Full preflight checks the original model ID, while
+smoke mode reuses verified historical metadata and records that it did not
+perform fresh metadata calls. Unavailable original generator or judge access
+halts; no model is substituted. Distinct judge ID `gemini-3.8-flash` is configured.
+Both requested temperature and model metadata are recorded, including versions
+only when actually supplied by the API; metadata access does not establish quota.
+A provider-version change during full preflight stops for review. Both models are from Google,
 so distinct model IDs do not remove provider-family bias.
 
 ## Original production semantics
@@ -58,23 +61,44 @@ index vector again. Index drift after that verification remains a limitation.
 
 The SQLite cache under ignored data/output/eval/generation/ stores exact context,
 full response and provider metadata, raw judge verdicts and a per-attempt journal.
-Cache keys bind question, model/temperature, full production/judge prompt,
-context digest (content/order/metadata), code/configuration hashes, package
-versions, API model metadata and frozen dataset/annotation hashes. Accuracy keys
-also bind the gold answer and optional-detail rubric. Successful stages commit
-transactionally and are reused after interruption; a judge error does not require
-regenerating a completed answer. Failures are journaled, never cached as success.
+Semantic cache keys bind question, model/temperature, full production/judge prompt,
+context digest (content/order/metadata and exact formatted context), API model
+name/version, API package versions, production chain behavior and frozen dataset/
+annotation hashes. Accuracy binds gold answer and optional-detail rubric. Judge
+keys also bind exact JSON request serialization, output MIME type and validator
+AST. Timeout, pacing, retry settings and whole harness/configuration file hashes
+are provenance, not semantic cache inputs. Operational-only edits reuse successful
+results. Prompt, model, context, dataset, schema or relevant behavior changes do not.
+
+Legacy opaque keys are reconstructed from verified historical run/Git bindings;
+additive aliases recover the original payloads without replacing them. Unknown
+historical runner behavior or mismatched provenance is rejected. New identities
+are recorded privately. See [RELIABILITY.md](RELIABILITY.md) for compatibility
+checks. Successful stages commit transactionally and survive interruption;
+failures remain journaled separately and never become score zero.
 There is an unavoidable crash window after a provider responds but before its
 local commit: exactly-once remote billing cannot be guaranteed.
 
-Calls have five-second minimum spacing, at most three attempts, exponential
-backoff of five then ten seconds (capped at forty), and a 90-second timeout.
-SDK retries are disabled where exposed to avoid multiplying these bounds.
-Authentication/model-not-found errors halt immediately; repeated quota errors
-halt the run. Successful results remain resumable. Invalid judge JSON/schemas are
-retried at most three times and recorded as missing if exhausted. Provider error
-text/URLs are not serialized; sanitized categories and attempt counts are used.
-The live provider/transport path remains untested when credentials are absent.
+Default minimum start spacing is 15 seconds for generator calls and 30 seconds
+for judge calls, per model. Requests use a 180-second HTTP timeout and at most
+three attempts, with exponential backoff (15 then 30 seconds), up to 25% positive
+jitter, capped at 60 seconds. Retry-After/RetryInfo are respected even beyond the
+backoff cap; a requested wait above 120 seconds defers the call rather than
+retrying too early. These cooldowns survive a process restart. Optional per-model
+rolling input-token budgets must come from actual project quotas; character/2
+estimates used for reservations are heuristics, not tokenizer measurements.
+The local rolling token window does not survive restart; wait a full minute and
+account for other project traffic before resuming. Unknown quotas are not invented.
+
+HTTP 429, each 500/502/503/504 status, transport timeouts, invalid JSON and invalid
+schemas are separately diagnosed, including wrapped provider exceptions. Explicit
+daily quota exhaustion, authentication, missing models and ordinary 4xx errors
+are not retried. Unknown 429 scope stays unknown. Full resume stops at the first
+exhausted stage; smoke tries at most once per stage with a total of two live judge
+calls. Smoke can still test accuracy after a transient faith failure, while a
+persisted provider cooldown may defer it. SDK retries are disabled so these call
+budgets are meaningful. Sanitized JSON progress includes ID, stage, attempt,
+completion counts and retry reason, with no raw error bodies, URLs or keys.
 
 ## Judge schema and interpretation
 

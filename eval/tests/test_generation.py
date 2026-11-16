@@ -121,10 +121,10 @@ class GenerationTest(unittest.TestCase):
                 raise Quota('secret-provider-url-and-key')
             with self.assertRaises(CallError) as caught:
                 caller.call({'stage':'generation'},fail)
-            self.assertEqual(caught.exception.category,'quota_or_rate_limit')
+            self.assertEqual(caught.exception.category,'rate_limit')
             self.assertEqual(caught.exception.attempts,3)
             journal=c.db.execute('SELECT category, attempt FROM attempts').fetchall()
-            self.assertEqual(journal,[('quota_or_rate_limit',i) for i in (1,2,3)])
+            self.assertEqual(journal,[('rate_limit',i) for i in (1,2,3)])
             self.assertNotIn('secret',str(journal));c.db.close()
 
     def test_missing_run_exports_pending_audit_without_scores(self):

@@ -6,11 +6,18 @@ generator:
 judge:
   model: gemini-3.8-flash
   temperature: 0
-rate_limit_seconds: 5
+rate_limit_seconds: 30
+per_model_min_interval_seconds:
+  gemini-3.1-flash-lite: 15
+  gemini-3.8-flash: 30
+# Set only from the project's actual AI Studio limit; no invented quota.
+tokens_per_minute: {}
 max_attempts: 3
-backoff_seconds: 5
-max_backoff_seconds: 40
-timeout_seconds: 90
+backoff_seconds: 15
+max_backoff_seconds: 60
+max_retry_wait_seconds: 120
+jitter_fraction: 0.25
+timeout_seconds: 180
 bootstrap_samples: 10000
 cache: data/output/eval/generation/cache.sqlite3
 retrieval_result: eval/results/2026-11-16T093849Z_a76f1d6a.json
