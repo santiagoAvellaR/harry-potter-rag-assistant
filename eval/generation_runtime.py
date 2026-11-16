@@ -270,7 +270,9 @@ class Caller:
                 factor = self.config.get('jitter_fraction', 0)
                 delay = min(self.config['max_backoff_seconds'], base * (1+self.jitter(0, factor)))
                 delay = max(delay, diagnostic['retry_after_seconds'] or 0)
-                if delay > self.config.get('max_retry_wait_seconds', 120):
+                if not diagnostic['retryable']:
+                    diagnostic['retry_reason'] = 'non_retryable'
+                elif delay > self.config.get('max_retry_wait_seconds', 120):
                     retry = False
                     diagnostic['retry_reason'] = 'retry_after_exceeds_wait_budget'
                 else:

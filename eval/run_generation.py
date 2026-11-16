@@ -229,6 +229,9 @@ def evaluate_judges(q, context, answer, common, cfg, metadata, notes, caller, in
         if results[stage]['status'] == 'error':
             if stop_on_error or results[stage]['diagnostic']['category'] in ('daily_quota_exhausted', 'authentication_or_permission', 'model_unavailable'):
                 break
+    for stage in ('faith', 'accuracy'):
+        if stage not in results:
+            results[stage] = {'status': 'not_attempted', 'reason': 'stopped_after_prior_stage_error'}
     return results
 
 

@@ -231,6 +231,21 @@ class MigrationTest(unittest.TestCase):
 
 
 class SmokeTest(unittest.TestCase):
+    def test_daily_quota_explicitly_marks_accuracy_not_attempted(self):
+        q = dict(id='F01', question='Question?', gold_answer='Gold', notes='', category='factual_simple')
+        cfg = {**CFG, 'max_attempts': 1, 'judge': {'model': 'J', 'temperature': 0}}
+        with tempfile.TemporaryDirectory() as d, patch('eval.run_generation.format_context', return_value='FORMATTED'):
+            cache = CallCache(Path(d)/'cache')
+            caller = Caller(cache, cfg, max_live_calls=2)
+            def invoke(stage, request):
+                raise ProviderError(429, {'details': [{'violations': [{'quotaId': 'requests_per_day'}]}]})
+            result = evaluate_judges(q, {'documents': []}, {'answer': 'Existing'}, {}, cfg,
+                {'judge': {'name': 'J'}}, [], caller, invoke)
+            self.assertEqual(caller.live_calls, 1)
+            self.assertEqual(result['accuracy']['status'], 'not_attempted')
+            self.assertNotIn('verdict', result['accuracy'])
+            cache.db.close()
+
     def test_one_cached_answer_two_judge_attempts_and_resume(self):
         q = dict(id='F01', question='Question?', gold_answer='Gold', notes='', category='factual_simple')
         ctx = {'documents': [{'page_content': 'Synthetic context', 'metadata': {}}]}
