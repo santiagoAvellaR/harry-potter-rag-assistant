@@ -1,0 +1,16 @@
+schema_version: 1
+seed: 42
+generator:
+  model: gemini-3.1-flash-lite
+  temperature: 0.2
+judge:
+  model: gemini-2.5-flash
+  temperature: 0
+rate_limit_seconds: 5
+max_attempts: 3
+backoff_seconds: 5
+max_backoff_seconds: 40
+timeout_seconds: 90
+bootstrap_samples: 10000
+cache: data/output/eval/generation/cache.sqlite3
+retrieval_result: eval/results/2026-11-16T093849Z_a76f1d6a.json

@@ -1,5 +1,9 @@
 # Reproducible evaluation — candidate dataset
 
+Phase 2B: [GENERATION.md](GENERATION.md) documents the separate generation/judging
+runner. [GENERATION_RESULTS.md](GENERATION_RESULTS.md) records actual execution
+status; its versioned artifacts never overwrite the frozen retrieval results.
+
 Current freeze (2026-11-16): Santiago approved the 45 selected questions and their
 wording for retrieval evaluation. Selected records now have `status: validated`;
 the other 15 remain candidates. This does **not** record independent owner
