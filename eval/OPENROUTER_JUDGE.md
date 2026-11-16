@@ -29,7 +29,7 @@ These are not backend usage measurements: actual server chat templates, schema
 handling, output/reasoning token usage and deployed tokenizer revision are
 unknown. Schema tokens are a hypothetical strict-output budget, not evidence
 that a serving endpoint supports that schema. The earlier GPT-OSS proxy preflight
-is retained separately and superseded by these Qwen counts.
+is retained locally under ignored preflight_history/ and superseded by these Qwen counts.
 
 **No paired inference smoke was performed**, since endpoint/throughput preflight
 did not pass. Both stages remain unexecuted, not score zero. No model revision,
@@ -91,3 +91,23 @@ at least three quota days would be needed without reusable OpenRouter judgments.
 Availability, latency and actual throughput are unverified, so suitability for the
 unchanged full evaluation is **not established**. No automatic full-run mode is
 added by this task.
+
+Observed final artifact: [2026-11-16T141050Z_openrouter_preflight.json](alternative_judge_results/2026-11-16T141050Z_openrouter_preflight.json).
+
+To reproduce the tokenizer setup without downloading model weights, run in the
+existing RAG environment (install eval/requirements-judge.txt first):
+
+```python
+import hashlib, json, urllib.request
+from pathlib import Path
+result = json.loads(Path('eval/alternative_judge_results/2026-11-16T141050Z_openrouter_preflight.json').read_text())
+manifest = result['tokenizer']
+folder = Path('data/output/eval/tokenizers/qwen3.8-27b')
+folder.mkdir(parents=True, exist_ok=True)
+for name, digest in manifest['files'].items():
+    url = f"https://huggingface.co/{manifest['model']}/resolve/{manifest['revision']}/{name}"
+    data = urllib.request.urlopen(url).read()
+    assert hashlib.sha256(data).hexdigest() == digest
+    (folder / name).write_bytes(data)
+(folder / 'manifest.json').write_text(json.dumps(manifest, indent=2))
+```

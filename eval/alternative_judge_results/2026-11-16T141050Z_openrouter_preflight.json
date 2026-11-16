@@ -1,0 +1,78 @@
+{
+  "question_id": "F01",
+  "provider": "openrouter",
+  "judge": {
+    "provider": "openrouter",
+    "model": "qwen/qwen3.8-27b:free",
+    "temperature": 0,
+    "schema_sha256": "cb0d77b22bcc062071b6b7ee42cd1699f55ba7ec80cc2f01cd554642efa741b2"
+  },
+  "generator": {
+    "model": "gemini-3.1-flash-lite",
+    "temperature": 0.2
+  },
+  "model_version": "unavailable until returned by API; alias not pinned",
+  "tokenizer": {
+    "model": "Qwen/Qwen3.8-27B",
+    "revision": "37561816e66b5b9153b1b64c10968c18c1e6f4a0",
+    "files": {
+      "tokenizer.json": "0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3",
+      "tokenizer_config.json": "207c03c41a06a9c3b0cc527d8a56115159c1eac6b59a4ffae85b646e773d074e"
+    },
+    "limitation": "Exact local content tokens; server chat/schema overhead and output unknown"
+  },
+  "token_estimates": {
+    "faith": {
+      "content_qwen_tokens": 12030,
+      "schema_qwen_tokens": 152,
+      "estimated_input_tokens": 12310,
+      "overhead_allowance_tokens": 128,
+      "request_characters": 29023,
+      "request_sha256": "12c6c4d42e4289b8f631153b02c8f23e3ee4a3104a90efe80181f090f0970246"
+    },
+    "accuracy": {
+      "content_qwen_tokens": 331,
+      "schema_qwen_tokens": 64,
+      "estimated_input_tokens": 523,
+      "overhead_allowance_tokens": 128,
+      "request_characters": 1575,
+      "request_sha256": "1a16ca14bacd0cd889c66156fe8a45999743d64e67dc4e9425830b74224b0f5c"
+    }
+  },
+  "free_tier_limits": {
+    "rpd": 50,
+    "rpm": 20,
+    "retry_reserve": 10,
+    "endpoint_tpm": null
+  },
+  "limit_source": "https://openrouter.ai/docs/api/reference/limits",
+  "limits_checked_utc": "2026-11-16T141050Z",
+  "context_sha256": "30f692f0c8257ca3245fcdfd3fd285d374642facca098c23d65c6532742ea26d",
+  "generation_payload_sha256": "d661111d24557cfe99da3aa09bceec661820f6211f80c08ccafb5f0926c3592b",
+  "dataset_sha256": "af757856ca15e47238b62bad62be746bbd47d76d49bad3a00ca75fe67e71510f",
+  "commit": "dcf09cada9350f83900720c3073acfd1f3d73493",
+  "code_sha256": {
+    "eval/judge_providers.py": "3d6a31aac839376ab16c06e5015cebb23832c2f941c259f78ceb84122ecc65bc",
+    "eval/run_alternative_judge.py": "0987b0a5d3be316f4570bd672af8ced999afc14b18f84684a59cb32bc180822e"
+  },
+  "live_calls": 0,
+  "stages": {},
+  "new_generation_calls": 0,
+  "new_retrieval_calls": 0,
+  "endpoint_metadata": {
+    "source": "https://openrouter.ai/api/v1/models/qwen/qwen3.8-27b:free/endpoints",
+    "checked_date": "2026-11-16",
+    "capture_method": "public endpoint inspected via web tool; description omitted",
+    "data": {
+      "id": "qwen/qwen3.8-27b:free",
+      "name": "Qwen: Qwen3.8 27B",
+      "architecture": {
+        "tokenizer": "Qwen"
+      },
+      "endpoints": []
+    }
+  },
+  "execution_status": "blocked_no_endpoints",
+  "input_throughput_compatible": null,
+  "original_success_entries_preserved": 12
+}
