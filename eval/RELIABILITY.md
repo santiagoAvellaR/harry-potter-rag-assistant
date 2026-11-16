@@ -113,11 +113,45 @@ errors, reference-only verdicts, token metadata and cache-preservation checks.
 The smoke does not overwrite the interrupted run JSON, GENERATION_RESULTS.md or
 judge_audit.csv. No full cohort is run automatically.
 
-Smoke execution and final test counts are pending the implementation commit.
+Actual smoke executions (implementation `8b2971e`):
+
+| Execution | Faith | Accuracy | Provider requests | New answers/retrievals |
+| --- | --- | --- | ---: | ---: |
+| [Sandbox probe](reliability_results/2026-11-16T131913Z_8b2971e2_smoke.json) | DNS transport failure | DNS transport failure | 0 reached Gemini; 2 local invoke attempts | 0 / 0 |
+| [Network-enabled smoke](reliability_results/2026-11-16T132003Z_8b2971e2_smoke.json) | HTTP 429, explicit daily quota exhausted | Not attempted after daily quota | 1 | 0 / 0 |
+
+The network-enabled response supplied a **67,195-second** provider retry delay.
+The persisted cooldown ends at approximately **2026-11-17 08:00 UTC (09:00 Paris)**.
+The current failure mechanism is therefore a real daily quota block, not a JSON
+parser failure. It does not identify the historical 19 transient failures or prove
+that the original two quota failures had the same scope. Accuracy remains
+untested against the live provider. No prompt/schema/model fallback was attempted.
+The sandbox probe is not evidence of provider overload; it failed local DNS and
+was rerun with network permission under the same two-attempt smoke bound.
+
+Both artifacts recorded 4 cached answers, 1 cached faith verdict and 0 cached
+accuracy verdicts afterwards. All 11 original success payloads remain byte-identical;
+only aliases, private binding records, sanitized diagnostic events and a provider
+cooldown were added. No full benchmark was run. Raw smoke JSON is retained as
+emitted: the quota-blocked artifact has no accuracy entry because the loop stopped
+at faith; this table explicitly records that it was not attempted. The follow-up
+implementation also emits an explicit not_attempted entry for skipped stages and
+prioritizes the non-retryable quota reason over the wait-budget reason.
+
+**38 deterministic tests passed** after those reporting refinements. A second real
+offline cache check after the code changes still recovered 4 answers and 1 verdict,
+without API calls or cache loss. All seven PDF hashes and frozen dataset bindings
+matched; production RAG code and Phase 2A artifacts were unchanged. Source whitespace
+checks passed for this task's files. Existing interrupted-run report, CSV and JSON
+remain untouched by this task and are not included in these commits.
 
 ## Recommended resumption gate
 
-1. Read the smoke artifact and safe diagnostics. Confirm all original successes
+1. **Do not resume all 45 questions now.** Current daily quota has not reset.
+   After the recorded cooldown (conservatively after 2026-11-17 08:01 UTC /
+   09:01 Paris), first repeat the same two-call judge-only smoke. Require both
+   actual faith and accuracy verdicts before considering full resumption.
+   Read the smoke artifact and safe diagnostics. Confirm all original successes
    are preserved. A successful smoke demonstrates one request of each judge type,
    not that 45-question throughput or judge validity is established.
 2. If daily quota is exhausted or a long Retry-After is returned, wait for its

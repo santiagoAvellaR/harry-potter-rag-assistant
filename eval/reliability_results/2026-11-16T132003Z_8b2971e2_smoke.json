@@ -1,0 +1,125 @@
+{
+  "schema_version": 2,
+  "started_utc": "2026-11-16T13:20:03.834386+00:00",
+  "commit": "8b2971e21a22f516a7bc3e806629393f56868f4d",
+  "config": {
+    "schema_version": 1,
+    "seed": 42,
+    "generator": {
+      "model": "gemini-3.1-flash-lite",
+      "temperature": 0.2
+    },
+    "judge": {
+      "model": "gemini-3.8-flash",
+      "temperature": 0
+    },
+    "rate_limit_seconds": 30,
+    "per_model_min_interval_seconds": {
+      "gemini-3.1-flash-lite": 15,
+      "gemini-3.8-flash": 30
+    },
+    "tokens_per_minute": {},
+    "max_attempts": 3,
+    "backoff_seconds": 15,
+    "max_backoff_seconds": 60,
+    "max_retry_wait_seconds": 120,
+    "jitter_fraction": 0.25,
+    "timeout_seconds": 180,
+    "bootstrap_samples": 10000,
+    "cache": "data/output/eval/generation/cache.sqlite3",
+    "retrieval_result": "eval/results/2026-11-16T093849Z_a76f1d6a.json"
+  },
+  "packages": {
+    "langchain-google-genai": "4.2.5",
+    "langchain-core": "1.4.6",
+    "google-genai": "2.8.0",
+    "chromadb": "1.5.9",
+    "langchain-community": "0.4.2",
+    "langchain-huggingface": "1.2.2",
+    "sentence-transformers": "5.5.1",
+    "torch": "2.12.0",
+    "numpy": "2.4.6",
+    "PyYAML": "6.0.3",
+    "python-dotenv": "1.2.2"
+  },
+  "python": "3.11.15 | packaged by conda-forge | (main, Jun 11 2026, 03:34:02) [GCC 14.3.0]",
+  "code_sha256": {
+    "eval/run_generation.py": "141f39c5355fbe897cb565d9e04e57c8738b108bbc3fa8b62ef558c447c31f98",
+    "eval/generation_core.py": "396b2109941aacff05b8d81c022deb4c4b1f318ee7260ec46cf5e53abb5b229f",
+    "eval/generation_runtime.py": "d0eeb3d720253a04972160569aed63149a281be8c79714033e10fcd4a38e9645",
+    "eval/generation_cache.py": "6e05aadbfb70521406c8124b48df91c6c6d07352556dbd4a1980d7b2fe366732",
+    "src/RAG/chain.py": "b10fe0e7a4da68b701c54237e025ee6685831f6888eb92751ae7b0cfaf3f2782",
+    "eval/generation_config.yaml": "71b6c610c04e6002cb53ca4bd4f33f56a14febc667743c176cbec5aa62ca0e8c"
+  },
+  "dataset_sha256": "af757856ca15e47238b62bad62be746bbd47d76d49bad3a00ca75fe67e71510f",
+  "annotations_sha256": "ff1b84566f208d0942294087bf1fb22eb4ecc2d3d7af842cb286d8d85b517e2c",
+  "phase2a_result_sha256": "09d9c8cb1961dd7430b5908380ff67ea79528513c0091c634dbd498b02c6e173",
+  "migration": {
+    "matched": {
+      "context": 4,
+      "generation": 4,
+      "faith": 1,
+      "accuracy": 0
+    },
+    "sources": [
+      {
+        "file": "2026-11-16T123106Z_f209eb3b.json",
+        "sha256": "2a5bc825311a17461a354e1ca0efecd81d9719ebbfa90ad44a5a1ea5e918fe31",
+        "commit": "f209eb3b93ac5cbf834bd01c393c1c23ad618716"
+      }
+    ],
+    "skipped": []
+  },
+  "original_success_entries": 11,
+  "original_successes_preserved": true,
+  "mode": "judge_only_smoke",
+  "question_id": "F01",
+  "max_live_calls": 2,
+  "completed_cached_before": {
+    "generation": 4,
+    "faith": 1,
+    "accuracy": 0
+  },
+  "model_metadata_source": "verified_historical_run_not_live_preflight",
+  "provider_models": {
+    "generator": {
+      "name": "models/gemini-3.1-flash-lite",
+      "version": "3.1-flash-lite-05-2026"
+    },
+    "judge": {
+      "name": "models/gemini-3.8-flash",
+      "version": "3.0"
+    }
+  },
+  "context_sha256": "30f692f0c8257ca3245fcdfd3fd285d374642facca098c23d65c6532742ea26d",
+  "generation_cache_key": "d400ff00b9b7964057600936f5cf22d6269aa4bdbab52eb2bdb8628f4c657618",
+  "context_characters": 23547,
+  "new_generation_calls": 0,
+  "new_retrieval_calls": 0,
+  "stages": {
+    "faith": {
+      "status": "error",
+      "diagnostic": {
+        "category": "daily_quota_exhausted",
+        "http_status": 429,
+        "retryable": false,
+        "quota_scope": "daily",
+        "retry_after_seconds": 67195.0,
+        "dns_failure": false,
+        "elapsed_seconds": 0.317,
+        "retry_reason": "retry_after_exceeds_wait_budget",
+        "retry_in_seconds": null
+      },
+      "attempts": 1
+    }
+  },
+  "live_judge_calls": 1,
+  "smoke_max_attempts_per_stage": 1,
+  "completed_cached_after": {
+    "generation": 4,
+    "faith": 1,
+    "accuracy": 0
+  },
+  "execution_status": "incomplete",
+  "finished_utc": "2026-11-16T13:20:04.218734+00:00"
+}
