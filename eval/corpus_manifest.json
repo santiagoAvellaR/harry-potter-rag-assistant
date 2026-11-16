@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "baseline_commit": "fc5eda96c8203fdf4283bb1d525f6cf854f847d9",
+  "page_convention": "Zero-based physical PDF page index; PDF viewer page = page + 1. Printed page labels are not used.",
+  "source_convention": "Exact PDF basename, normalized from retriever metadata.source before comparison.",
+  "extraction_tool": "pdftotext 25.03.0 (Poppler), -layout; evidence pages reopened individually with -f/-l; no project retrieval or embeddings.",
+  "books": [
+    {
+      "book": 1,
+      "source": "harry-potter-1-lecole-des-sorciers.pdf",
+      "sha256": "5062695fd1de398762429095c7d8dc0c1913af7d868b80e606777b7bd3f199d5",
+      "pages": 208
+    },
+    {
+      "book": 2,
+      "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+      "sha256": "5006c012611f802b9b3bfa2abc372f1f15fe6e975e5e8c5e301912299711c946",
+      "pages": 177
+    },
+    {
+      "book": 3,
+      "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+      "sha256": "a827a44c89f130de37fcade3bdc8400d53af8443d4bc8883415a8b1c2023a31d",
+      "pages": 288
+    },
+    {
+      "book": 4,
+      "source": "harry-potter-4-la-coupe-de-feu.pdf",
+      "sha256": "5fff74c900696330e2b0a13bccb50f2602e941bbc9b09f42ea18aa20db93d010",
+      "pages": 386
+    },
+    {
+      "book": 5,
+      "source": "harry-potter-5-lordre-du-phoenix.pdf",
+      "sha256": "6c94ae3c2380c56b9df835e73eece823349c5a0da35116dd553b6dff0d7afab4",
+      "pages": 694
+    },
+    {
+      "book": 6,
+      "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+      "sha256": "5d4244b86cf3711118f1b8a872a80f32b5effa19b1d673609292d75684cca997",
+      "pages": 415
+    },
+    {
+      "book": 7,
+      "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+      "sha256": "b5d51c89b493b3f7cc912e271d7b84924abc9b94c7cb92ece082bdca98d16ea8",
+      "pages": 541
+    }
+  ]
+}
