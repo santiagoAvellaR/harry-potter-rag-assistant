@@ -3,6 +3,8 @@
 **Phase 1 only: human validation is pending.** The 60 entries in
 [questions.jsonl](questions.jsonl) all have `status: "candidate"`. No benchmark
 metrics, model answers, judge verdicts, or confidence intervals exist yet.
+See [SHORTLIST.md](SHORTLIST.md) for the Phase 1 audit and proposed 45-question
+cohort; its recommendations are pending human approval.
 Start with [REVIEW.md](REVIEW.md) to accept, edit, or reject candidates and retain
 40–50 validated questions before implementing and running the benchmark.
 
