@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "audit_baseline": "4c63bc9",
-  "questions_sha256": "6ab5e2ec21b5d0ea9b7ad80b0441149f7e3835cf34a1c2959f1ece88fa4532ea",
-  "selection_status": "proposed_for_human_review",
+  "questions_sha256": "af757856ca15e47238b62bad62be746bbd47d76d49bad3a00ca75fe67e71510f",
+  "selection_status": "owner_approved_selection_and_wording",
   "proposed_ids": [
     "F01",
     "F03",

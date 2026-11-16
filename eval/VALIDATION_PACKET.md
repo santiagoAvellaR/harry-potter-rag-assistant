@@ -1,5 +1,13 @@
 # Phase 1b human validation packet
 
+Current freeze (2026-11-16): Santiago approved the 45 selected questions and their
+wording for retrieval evaluation. Selected records now have `status: validated`;
+the other 15 remain candidates. This does **not** record independent owner
+verification of every evidence page or annotation. Evidence `human_review` stays
+`pending`. See [dataset_freeze.json](dataset_freeze.json) for scope and hashes.
+The phase-1 narrative below is historical where it describes pending selection.
+
+
 Audit baseline: `4c63bc9`. **45 proposed questions, zero validated.**
 All 60 candidates remain in questions.jsonl with stable IDs; this packet and the
 sidecar explicitly identify the proposed cohort. Excluded items remain available
@@ -12,7 +20,7 @@ and audited these annotations. A human must verify the French wording, answers,
 page roles and category labels, and approve the selected IDs before Phase 2.
 No reviewer name or date is inferred. All decisions below are blank deliberately.
 
-Dataset SHA-256: `6ab5e2ec21b5d0ea9b7ad80b0441149f7e3835cf34a1c2959f1ece88fa4532ea`.
+Dataset SHA-256: `af757856ca15e47238b62bad62be746bbd47d76d49bad3a00ca75fe67e71510f`.
 
 ## How to review evidence
 

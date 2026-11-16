@@ -43,10 +43,20 @@ def main():
     require(len({q['question'] for q in rows}) == 60, 'Duplicate question')
     require(side['schema_version'] == 1 and side['audit_baseline'] == '4c63bc9',
             'Wrong schema/baseline')
-    require(side['selection_status'] == 'proposed_for_human_review', 'Wrong state')
+    require(side['selection_status'] == 'owner_approved_selection_and_wording', 'Wrong state')
+    freeze = read_json(EVAL / 'dataset_freeze.json')
+    require(freeze['approved_ids'] == side['proposed_ids'], 'Approval IDs mismatch')
+    require(freeze['questions_sha256'] == digest(raw), 'Freeze hash mismatch')
+    require(freeze['annotations_sha256'] == digest((EVAL / 'evidence_annotations.json').read_bytes()), 'Annotation freeze mismatch')
+    phase1b_raw = subprocess.check_output(['git', 'show', 'e201796:eval/questions.jsonl'], cwd=ROOT)
+    phase1b = [json.loads(line) for line in phase1b_raw.decode().splitlines()]
+    require(freeze['prior_questions_sha256'] == digest(phase1b_raw), 'Prior freeze hash mismatch')
+    for previous, current in zip(phase1b, rows):
+        expected = dict(previous, status='validated' if previous['id'] in side['proposed_ids'] else 'candidate')
+        require(current == expected, 'Freeze changed more than status')
     require(side['questions_sha256'] == digest(raw), 'Stale sidecar binding')
     require(changes['before_questions_sha256'] == digest(baseline_raw), 'Wrong baseline hash')
-    require(changes['after_questions_sha256'] == digest(raw), 'Stale change log')
+    require(changes['after_questions_sha256'] == digest(phase1b_raw), 'Stale phase1b log')
     expected_changes = []
     references = set()
 
@@ -60,7 +70,7 @@ def main():
 
     fields = {'id', 'question', 'category', 'gold_answer', 'gold_pages', 'notes', 'status'}
     for old, q in zip(before, rows):
-        require(set(q) == fields and q['status'] == 'candidate', 'Schema/status mismatch')
+        require(set(q) == fields and q['status'] == ('validated' if q['id'] in side['proposed_ids'] else 'candidate'), 'Schema/status mismatch')
         require(q['category'] == old['category'], 'Category changed')
         require(q['gold_pages'] == old['gold_pages'], 'Historical flat references changed')
         for key in ('id', 'question', 'category', 'gold_answer', 'notes'):
@@ -68,9 +78,10 @@ def main():
         require(bool(q['gold_pages']) == (q['category'] != 'unanswerable'), 'Gold/negative mismatch')
         pairs = [check_ref(r) for r in q['gold_pages']]
         require(len(pairs) == len(set(pairs)), 'Duplicate flat reference')
-        if old != q:
+        editorial = dict(q, status='candidate')
+        if old != editorial:
             expected_changes.append({'id': q['id'], 'fields': {
-                k: {'before': old[k], 'after': q[k]} for k in q if q[k] != old[k]}})
+                k: {'before': old[k], 'after': editorial[k]} for k in editorial if editorial[k] != old[k]}})
     require(changes['changes'] == expected_changes, 'Change log differs from actual changes')
     require({c['id'] for c in expected_changes} == {
         'F01', 'F09', 'M02', 'M03', 'M05', 'M08', 'M11', 'C03', 'C06', 'C09', 'P06'},
@@ -157,7 +168,7 @@ def main():
             opened.append(dict(source=source, page=page, sha256=digest(target.read_bytes())))
         (out / 'opened_pages.json').write_text(json.dumps(opened, indent=2) + '\n', encoding='utf-8')
         print(f'Verified seven PDF hashes/counts and reopened {len(opened)} pages.')
-    print('PASS: 60 preserved candidates, 11 logged edits, 45 proposed annotations, no validations.')
+    print('PASS: 60 preserved candidates, 11 logged edits, 45 approved selections; evidence review still pending.')
     print('Category counts:', dict(categories))
 
 

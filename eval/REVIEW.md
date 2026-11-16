@@ -1,5 +1,13 @@
 # Candidate review — phase 1
 
+Current freeze (2026-11-16): Santiago approved the 45 selected questions and their
+wording for retrieval evaluation. Selected records now have `status: validated`;
+the other 15 remain candidates. This does **not** record independent owner
+verification of every evidence page or annotation. Evidence `human_review` stays
+`pending`. See [dataset_freeze.json](dataset_freeze.json) for scope and hashes.
+The phase-1 narrative below is historical where it describes pending selection.
+
+
 All 60 entries are **candidates**, not a validated benchmark. No retrieval or generation scores have been calculated.
 
 Write `accept`, `edit`, or `reject` in the Decision column and explain changes in Reviewer notes. Check the French reference answer and English scope notes in [questions.jsonl](questions.jsonl) as well as the PDF pages. Links below open your local PDFs; they are intentionally absent from the public repository. **PDF means the viewer page (one-based); JSON means the stored page index (zero-based).** Browser PDF fragments may be ignored; use the displayed page number if needed.

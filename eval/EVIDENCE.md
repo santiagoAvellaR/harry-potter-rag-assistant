@@ -1,5 +1,13 @@
 # Evidence annotation sidecar (phase 1b)
 
+Current freeze (2026-11-16): Santiago approved the 45 selected questions and their
+wording for retrieval evaluation. Selected records now have `status: validated`;
+the other 15 remain candidates. This does **not** record independent owner
+verification of every evidence page or annotation. Evidence `human_review` stays
+`pending`. See [dataset_freeze.json](dataset_freeze.json) for scope and hashes.
+The phase-1 narrative below is historical where it describes pending selection.
+
+
 `evidence_annotations.json` is a review artifact, not a benchmark harness. It
 selects 45 of the 60 candidates by stable ID. Excluded candidates remain intact
 in questions.jsonl; a reader must use `proposed_ids` rather than silently treating
