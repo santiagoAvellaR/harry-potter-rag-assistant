@@ -1,0 +1,158 @@
+{
+  "baseline_commit": "4c63bc9",
+  "before_questions_sha256": "430e9ba7393330afa2fdbba5c47456fcdd78308f35826c2d5043f6bba70d768d",
+  "after_questions_sha256": "6ab5e2ec21b5d0ea9b7ad80b0441149f7e3835cf34a1c2959f1ece88fa4532ea",
+  "changes": [
+    {
+      "id": "F01",
+      "fields": {
+        "question": {
+          "before": "Au premier cours de potions, Rogue distingue-t-il le napel du tue-loup ?",
+          "after": "Quelle plante Rogue désigne-t-il lorsqu'il parle du tue-loup pendant son premier cours ?"
+        },
+        "gold_answer": {
+          "before": "Non : ce sont deux noms de l'aconit, la même plante.",
+          "after": "Il s'agit de l'aconit, également appelé napel."
+        },
+        "notes": {
+          "before": "Scope: Snape's first lesson; identify the plant, not the separate bezoar explanation.",
+          "after": "Phase 1b: neutral open question replaces a leading yes/no contrast; PDF 95 explicitly identifies both plant names."
+        }
+      }
+    },
+    {
+      "id": "F09",
+      "fields": {
+        "gold_answer": {
+          "before": "Dobby lui apporte de la branchiflore, qu'il doit manger avant de plonger.",
+          "after": "Dobby lui apporte de la branchiflore pour lui permettre de respirer sous l'eau."
+        },
+        "notes": {
+          "before": "Evaluate the novel, not its film adaptation; the answer does not require the later explanation of who influenced Dobby.",
+          "after": "Phase 1b: PDF 265 directly supports helper and plant; PDF 358 supplies an alternative recap in evidence_annotations.json. Eating instruction is not required by this question. Original flat gold_pages preserved."
+        }
+      }
+    },
+    {
+      "id": "M02",
+      "fields": {
+        "gold_answer": {
+          "before": "La sortie nocturne coûte cent cinquante points à Gryffondor. Au banquet, Dumbledore ajoute cent soixante-dix points au total : cinquante à Ron, cinquante à Hermione, soixante à Harry et dix à Neville.",
+          "after": "La sortie nocturne coûte cent cinquante points à Gryffondor. Dumbledore ajoute ensuite cent soixante-dix points au banquet final."
+        },
+        "notes": {
+          "before": "Requires the punishment scene and the banquet, including page continuations and addition. F02 shares one award; consider retaining only one if balancing evidence dependence.",
+          "after": "Phase 1b: only the two requested totals are required. PDF 165 states the loss; PDF 206 permits the final total (100 + 60 + 10). PDFs 164 and 205 are context only for this answer, preserved in flat gold_pages."
+        }
+      }
+    },
+    {
+      "id": "M03",
+      "fields": {
+        "question": {
+          "before": "Pourquoi Harry soupçonne-t-il Hagrid après avoir exploré le journal, et que lui apprend ensuite Jedusor sur le rôle de Ginny dans les nouvelles attaques ?",
+          "after": "De quoi Jedusor accuse-t-il précisément Hagrid dans le souvenir qui trompe Harry, et comment explique-t-il ensuite le rôle de Ginny dans les nouvelles attaques ?"
+        },
+        "notes": {
+          "before": "Separate accusation from established fact: Hagrid is falsely suspected. Pages 128-129 form one scene, page 161 is the distant revelation.",
+          "after": "Phase 1b: explicitly asks for the accusation about keeping a murderous creature, not merely the capture recalled on PDF 161. PDF 128 supports the accusation, 129 corroborates Harry's false conclusion, and 161 supports manipulation of Ginny. These are not all independently required pages."
+        }
+      }
+    },
+    {
+      "id": "M05",
+      "fields": {
+        "question": {
+          "before": "Pourquoi l'Éclair de Feu reçu par Harry est-il confisqué, et que révèle finalement la lettre de son expéditeur ?",
+          "after": "Pourquoi l'Éclair de Feu reçu par Harry est-il confisqué, et qui la lettre finale révèle-t-elle comme son donateur ?"
+        },
+        "gold_answer": {
+          "before": "McGonagall le fait vérifier parce qu'Hermione soupçonne Sirius Black de l'avoir envoyé avec un mauvais sort. Sirius confirme à la fin qu'il l'a offert à Harry comme cadeau d'anniversaire, et non comme piège.",
+          "after": "McGonagall le fait vérifier parce qu'Hermione soupçonne Sirius Black de l'avoir envoyé avec un mauvais sort. La lettre révèle que Sirius est bien le donateur."
+        },
+        "notes": {
+          "before": "Two distant scenes; the letter page also explicitly states that it was not bewitched. Shares a page with R06 but asks different facts.",
+          "after": "Phase 1b: limits the letter question to donor identity. PDF 154 supports inspection and suspicion; PDF 286 supports donor. Payment, apology and Ron's reassurance about enchantment are not required."
+        }
+      }
+    },
+    {
+      "id": "M08",
+      "fields": {
+        "notes": {
+          "before": "Distinct task solutions. The scoring recap on PDF 273 names the Bubble-Head Charm and is an alternative support for the second task.",
+          "after": "Phase 1b: complementary needs are dragon diversion (PDF 200) and underwater breathing (either PDF 270 OR 273). The two water pages are alternatives, not jointly required. See evidence_annotations.json; flat gold_pages unchanged."
+        }
+      }
+    },
+    {
+      "id": "M11",
+      "fields": {
+        "question": {
+          "before": "Qui est atteint par le collier et par l'hydromel dans la sixième année de Harry, et qui était en réalité visé ?",
+          "after": "Qu'arrive-t-il physiquement à Katie quand elle touche le collier et à Ron après l'hydromel, et qui ces deux attaques visaient-elles ?"
+        },
+        "gold_answer": {
+          "before": "Katie Bell est victime du collier et Ron de l'hydromel empoisonné. Ces deux tentatives de Drago visaient en réalité Dumbledore.",
+          "after": "Katie s'élève dans les airs, hurle puis retombe ; Ron s'effondre en convulsant après avoir bu l'hydromel. Les deux attaques visaient Dumbledore."
+        },
+        "notes": {
+          "before": "Victims are identified in separate scenes; the tower conversation establishes the intended target and links both attempts.",
+          "after": "Phase 1b: adds event-specific physical effects to avoid the nearby victim-name recap on PDFs 374-376. PDF 162 describes Katie, 255 describes Ron, and 376 establishes the intended target; each need is complementary."
+        }
+      }
+    },
+    {
+      "id": "C03",
+      "fields": {
+        "question": {
+          "before": "Qui Harry retrouve-t-il en regardant le miroir lors de son premier Noël à Poudlard, puis grâce à la pierre qu'il utilise avant de rejoindre Voldemort dans la forêt ?",
+          "after": "Quels parents Harry voit-il dans le miroir lors de son premier Noël à Poudlard, et quelles sont les quatre personnes qui lui apparaissent grâce à la pierre avant qu'il rejoigne Voldemort dans la forêt ?"
+        },
+        "gold_answer": {
+          "before": "Dans le miroir, il voit ses parents et d'autres membres de sa famille. La Pierre de Résurrection fait ensuite apparaître James, Lily, Sirius et Lupin auprès de lui.",
+          "after": "Dans le miroir, il voit son père et sa mère, James et Lily. La Pierre de Résurrection fait apparaître James, Lily, Sirius et Lupin auprès de lui."
+        },
+        "notes": {
+          "before": "The mirror explanation is an alternative support to its discovery scene; both are included. The stone scene spans two pages; these are appearances, not permanent resurrection.",
+          "after": "Phase 1b: parents rather than extended family are required. Either PDF 141 or 144 supports the parents; PDFs 500 and 501 together establish the four stone appearances. No permanent resurrection is implied."
+        }
+      }
+    },
+    {
+      "id": "C06",
+      "fields": {
+        "question": {
+          "before": "Qui prête la moto à Hagrid pour amener Harry bébé, et qui la modifie avant son dernier départ de Privet Drive ?",
+          "after": "Qui dit avoir emprunté la moto pour amener Harry bébé, à qui l'a-t-il empruntée, et qui la modifie avant le dernier départ de Harry de Privet Drive ?"
+        },
+        "gold_answer": {
+          "before": "Sirius Black prête d'abord la moto à Hagrid. Arthur Weasley la modifie avant le départ de Harry adolescent.",
+          "after": "Hagrid explique l'avoir empruntée à Sirius Black. Arthur Weasley la modifie avant le dernier départ de Harry."
+        },
+        "notes": {
+          "before": "Distinguish the original lender from the later mechanic; no claim that Hagrid built the motorcycle.",
+          "after": "Phase 1b: asks for the explicit loan report on book 1 PDF 11, not merely ownership inferable from book 7 PDF 38. The latter supports Arthur's modifications. Historical comparison; human review must still assess shortcut risk and cross-book label."
+        }
+      }
+    },
+    {
+      "id": "C09",
+      "fields": {
+        "notes": {
+          "before": "The question compares the two events without requiring an unsupported explicit identity claim about the cabinets; both scenes span page boundaries.",
+          "after": "Phase 1b: book 2 PDF 69 suffices for Nick's diversion and avoided detention; PDF 68 is context. Book 6 PDFs 375-376 jointly establish paired-cabinet repair and confirmed entry. No unsupported physical-cabinet identity claim. See sidecar; flat gold_pages unchanged."
+        }
+      }
+    },
+    {
+      "id": "P06",
+      "fields": {
+        "notes": {
+          "before": "One continuous passage across a page boundary, not multi_passage; avoid the technical word Inferi in the question.",
+          "after": "Phase 1b: book 6 PDF 369 alone supports fire protection and return to the boat. PDF 368 supports the narrower fire-repulsion need but not the full embarkation answer. Sidecar separates these needs; flat gold_pages unchanged."
+        }
+      }
+    }
+  ]
+}

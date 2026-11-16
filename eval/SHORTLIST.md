@@ -1,5 +1,11 @@
 # Phase 1 audit and proposed shortlist
 
+Historical audit at 4c63bc9. Phase 1b applies its 11 EDIT recommendations; see
+[VALIDATION_PACKET.md](VALIDATION_PACKET.md) for current wording and evidence
+annotations. Statements below about unchanged data and absent sidecar describe
+the audit baseline, not the current working dataset.
+
+
 Audit baseline: `2d87c1e`; branch: `eval-benchmark`. This is an AI audit by Codex,
 not human validation. All 60 original IDs, answers, references, and `candidate`
 statuses are preserved. The dataset is **unchanged**; proposed editorial and

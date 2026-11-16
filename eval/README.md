@@ -1,5 +1,11 @@
 # Reproducible evaluation — candidate dataset
 
+Phase 1b: [VALIDATION_PACKET.md](VALIDATION_PACKET.md) contains the current 45-item
+proposal and applied corrections. [EVIDENCE.md](EVIDENCE.md) documents the annotation
+sidecar. All 60 original candidates remain available; none are validated. The
+earlier methodology below describes phase 1; SHORTLIST.md is the historical audit.
+
+
 **Phase 1 only: human validation is pending.** The 60 entries in
 [questions.jsonl](questions.jsonl) all have `status: "candidate"`. No benchmark
 metrics, model answers, judge verdicts, or confidence intervals exist yet.

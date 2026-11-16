@@ -1,0 +1,1469 @@
+{
+  "schema_version": 1,
+  "audit_baseline": "4c63bc9",
+  "questions_sha256": "6ab5e2ec21b5d0ea9b7ad80b0441149f7e3835cf34a1c2959f1ece88fa4532ea",
+  "selection_status": "proposed_for_human_review",
+  "proposed_ids": [
+    "F01",
+    "F03",
+    "F04",
+    "F06",
+    "F07",
+    "F08",
+    "F09",
+    "F10",
+    "F12",
+    "F13",
+    "F14",
+    "R01",
+    "R03",
+    "R04",
+    "R05",
+    "R07",
+    "R09",
+    "R10",
+    "R11",
+    "R12",
+    "M01",
+    "M02",
+    "M03",
+    "M04",
+    "M05",
+    "M06",
+    "M08",
+    "M09",
+    "M10",
+    "M11",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C09",
+    "P01",
+    "P02",
+    "P04",
+    "P05",
+    "P06",
+    "U01",
+    "U03",
+    "U05"
+  ],
+  "excluded_ids": [
+    "F02",
+    "F05",
+    "F11",
+    "F15",
+    "R02",
+    "R06",
+    "R08",
+    "M07",
+    "M12",
+    "C01",
+    "C08",
+    "C10",
+    "P03",
+    "U02",
+    "U04"
+  ],
+  "u04_decision": "Excluded: tenure and targeted negative searches do not adequately establish a complete novel-only absence claim; no forced 46th question.",
+  "annotations": {
+    "F01": {
+      "needs": [
+        {
+          "claim": "Il s'agit de l'aconit, également appelé napel.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 94
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F03": {
+      "needs": [
+        {
+          "claim": "Elle peut changer les métaux en or et produire un élixir qui permet de prolonger la vie indéfiniment.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 148
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F04": {
+      "needs": [
+        {
+          "claim": "Leurs cris peuvent les assommer pendant plusieurs heures. À cet âge, les plantes ne tuent pas encore par leur cri.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 50
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F06": {
+      "needs": [
+        {
+          "claim": "Il emprunte le nom de Neville Londubat pour ne pas être reconnu.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+                  "page": 23
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F07": {
+      "needs": [
+        {
+          "claim": "Elle voit le professeur McGonagall lui annoncer qu'elle a échoué à tout.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+                  "page": 209
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F08": {
+      "needs": [
+        {
+          "claim": "Il tire le Magyar à pointes et doit passer en quatrième position.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-4-la-coupe-de-feu.pdf",
+                  "page": 194
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F09": {
+      "needs": [
+        {
+          "claim": "Dobby apporte la branchiflore.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-4-la-coupe-de-feu.pdf",
+                  "page": 264
+                }
+              ]
+            },
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-4-la-coupe-de-feu.pdf",
+                  "page": 357
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F10": {
+      "needs": [
+        {
+          "claim": "Elle écrit avec le sang de Harry et grave en même temps les mots au dos de sa main. La plaie se referme puis se rouvre lorsqu'il recommence.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 215
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F12": {
+      "needs": [
+        {
+          "claim": "Il promet un petit flacon de Félix Felicis, contenant de quoi bénéficier de douze heures de chance.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 120
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F13": {
+      "needs": [
+        {
+          "claim": "Il envisage sept parties, car il attribue une puissance magique particulière au nombre sept.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 318
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "F14": {
+      "needs": [
+        {
+          "claim": "Il entend sa voix à travers le Déluminateur qu'il garde dans sa poche.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+                  "page": 272
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "R01": {
+      "needs": [
+        {
+          "claim": "C'est une glace au chocolat et à la fraise, avec des noisettes.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 53
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "R03": {
+      "needs": [
+        {
+          "claim": "Les musiciens jouent d'une trentaine de scies musicales.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 69
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Approximate instrument count is optional; musical saws is the required identification."
+    },
+    "R04": {
+      "needs": [
+        {
+          "claim": "On retrouve une grappe de raisins près de lui.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 93
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "R05": {
+      "needs": [
+        {
+          "claim": "Elle lui sert un soda au sirop de cerise, accompagné d'une boule de glace et d'une ombrelle.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+                  "page": 134
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "R07": {
+      "needs": [
+        {
+          "claim": "L'une est rouge et décorée de balais volants ; l'autre est verte et porte des motifs de Vifs d'or.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-4-la-coupe-de-feu.pdf",
+                  "page": 224
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "R09": {
+      "needs": [
+        {
+          "claim": "Il compose le 62442.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 101
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "R10": {
+      "needs": [
+        {
+          "claim": "Il est dans la salle Dai Llewellyn, réservée aux morsures graves.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 392
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "R11": {
+      "needs": [
+        {
+          "claim": "Elle cite l'herbe fraîchement coupée et le parchemin neuf.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 118
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "R12": {
+      "needs": [
+        {
+          "claim": "Fred se procure les cheveux avec un sortilège d'Attraction.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+                  "page": 97
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Donor description and village in the gold answer are optional elaboration; method is required."
+    },
+    "M01": {
+      "needs": [
+        {
+          "claim": "Le premier essai de la flûte évoque le cri d'un hibou.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 134
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Harry joue pour endormir Touffu et accéder à la trappe.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 183
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "M02": {
+      "needs": [
+        {
+          "claim": "Gryffondor perd 150 points.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 164
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Le banquet apporte 170 points à Gryffondor.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 205
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [
+        {
+          "source": "harry-potter-1-lecole-des-sorciers.pdf",
+          "page": 163
+        },
+        {
+          "source": "harry-potter-1-lecole-des-sorciers.pdf",
+          "page": 204
+        }
+      ],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Only totals are required; the earlier scene and Ron's individual award are context, not extra scored needs."
+    },
+    "M03": {
+      "needs": [
+        {
+          "claim": "Jedusor accuse Hagrid de garder une créature qui aurait tué une élève.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 127
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Jedusor manipule Ginny pour ouvrir la Chambre et lancer les attaques.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 160
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [
+        {
+          "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+          "page": 128
+        }
+      ],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "PDF 129 corroborates Harry's mistaken inference. The question now requires the detailed accusation rather than a generic capture recap."
+    },
+    "M04": {
+      "needs": [
+        {
+          "claim": "La voiture expulse les garçons et leurs bagages puis s'en va.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 41
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Elle les sauve des araignées et les conduit à la lisière.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 144
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "M05": {
+      "needs": [
+        {
+          "claim": "Le balai est confisqué pour vérifier un possible mauvais sort, Hermione soupçonnant Sirius.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+                  "page": 153
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Sirius révèle être le donateur.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+                  "page": 285
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "M06": {
+      "needs": [
+        {
+          "claim": "Le serviteur se libérera avant minuit et aidera Voldemort à retrouver sa puissance.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+                  "page": 213
+                }
+              ]
+            },
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+                  "page": 281
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Pettigrow neutralise Ron et s'échappe en rat hors de sa menotte.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+                  "page": 252
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "M08": {
+      "needs": [
+        {
+          "claim": "Cedric transforme une pierre en chien pour distraire le dragon.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-4-la-coupe-de-feu.pdf",
+                  "page": 199
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Il respire sous l'eau grâce à une bulle autour de sa tête.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-4-la-coupe-de-feu.pdf",
+                  "page": 269
+                }
+              ]
+            },
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-4-la-coupe-de-feu.pdf",
+                  "page": 272
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "M09": {
+      "needs": [
+        {
+          "claim": "Ombrage soutient qu'une préparation théorique suffit.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 196
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Harry fait pratiquer le désarmement par équipes de deux.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 317
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "M10": {
+      "needs": [
+        {
+          "claim": "Des faux Gallions liés transmettent la date et l'heure des réunions.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 321
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Marietta porte des boutons formant le mot cafard après sa dénonciation.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 489
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Hermione a ensorcelé la liste des membres.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 509
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "M11": {
+      "needs": [
+        {
+          "claim": "Katie s'élève, hurle puis retombe.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 161
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Ron s'effondre en convulsant après avoir bu l'hydromel.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 254
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Dumbledore était la cible des deux attaques.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 375
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "C02": {
+      "needs": [
+        {
+          "claim": "Harry place le journal dans une chaussette que Lucius jette et que Dobby récupère, le libérant.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 174
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Dobby accepte un Gallion par semaine et un jour de congé par mois après avoir refusé davantage.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-4-la-coupe-de-feu.pdf",
+                  "page": 208
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "C03": {
+      "needs": [
+        {
+          "claim": "Harry voit son père et sa mère dans le miroir.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 140
+                }
+              ]
+            },
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 143
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "La pierre fait apparaître James, Lily, Sirius et Lupin.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+                  "page": 499
+                },
+                {
+                  "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+                  "page": 500
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "The parents' names are identification aliases, not an extra requirement for the mirror page to spell both given names. All four stone appearances need the two-page bundle."
+    },
+    "C04": {
+      "needs": [
+        {
+          "claim": "James et Sirius utilisaient leurs miroirs pour communiquer pendant des retenues séparées.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 683
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Abelforth utilise le miroir et envoie Dobby secourir Harry.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+                  "page": 398
+                },
+                {
+                  "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+                  "page": 399
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "C05": {
+      "needs": [
+        {
+          "claim": "Personne ne parvient à ouvrir le médaillon pendant le nettoyage.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 94
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Kreattur l'a récupéré puis Mondingus l'a volé.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+                  "page": 136
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "C06": {
+      "needs": [
+        {
+          "claim": "Hagrid rapporte avoir emprunté la moto à Sirius.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 10
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Arthur a modifié la moto avant le dernier départ.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+                  "page": 37
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Book 7 identifies Sirius's motorcycle but does not reproduce the original explicit loan report. Cross-book necessity remains a human decision; inference can create a shortcut."
+    },
+    "C07": {
+      "needs": [
+        {
+          "claim": "Harry veut éviter que les amis de son père deviennent des meurtriers.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-3-le-prisonnier-dazkaban.pdf",
+                  "page": 248
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Le rappel de sa dette fait hésiter Pettigrow puis la main d'argent l'étrangle.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+                  "page": 335
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "C09": {
+      "needs": [
+        {
+          "claim": "Nick détourne Rusard pour éviter une punition à Harry.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 68
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Drago répare la liaison entre les deux armoires pour faire entrer les Mangemorts.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 374
+                },
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 375
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [
+        {
+          "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+          "page": 67
+        }
+      ],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "P01": {
+      "needs": [
+        {
+          "claim": "Elle donne à voir ce que l'on désire le plus profondément, sans garantir que cela soit réel ou possible. On peut s'y perdre au point de négliger la vie réelle.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-1-lecole-des-sorciers.pdf",
+                  "page": 143
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "P02": {
+      "needs": [
+        {
+          "claim": "Il recueillait le récit des exploits d'autres sorciers, puis effaçait leurs souvenirs. Il pouvait ensuite publier ces histoires en s'en attribuant le mérite.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+                  "page": 153
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "P04": {
+      "needs": [
+        {
+          "claim": "Rita Skeeter prend la forme d'un scarabée pour écouter discrètement les conversations. C'est une Animagus qui n'a pas déclaré ce pouvoir.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-4-la-coupe-de-feu.pdf",
+                  "page": 382
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "P05": {
+      "needs": [
+        {
+          "claim": "Il conseille la Salle sur Demande, qui se manifeste quand on en a vraiment besoin. Son contenu s'adapte à ce que recherche la personne qui la trouve.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-5-lordre-du-phoenix.pdf",
+                  "page": 312
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "Sufficient support checked locally; exhaustive alternative search and human validation pending."
+    },
+    "P06": {
+      "needs": [
+        {
+          "claim": "Le feu de Dumbledore repousse les cadavres.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 367
+                }
+              ]
+            },
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 368
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "claim": "Le cercle de feu les protège jusqu'au bateau.",
+          "required": true,
+          "any_of": [
+            {
+              "all_of": [
+                {
+                  "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+                  "page": 368
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "context_only": [],
+      "counterchecks": [],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "PDF 369 alone covers both needs; 368 supports repulsion only and is not required for full answer support."
+    },
+    "U01": {
+      "needs": [],
+      "context_only": [],
+      "counterchecks": [
+        {
+          "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+          "page": 104
+        },
+        {
+          "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+          "page": 107
+        },
+        {
+          "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+          "page": 267
+        },
+        {
+          "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+          "page": 272
+        },
+        {
+          "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+          "page": 278
+        },
+        {
+          "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+          "page": 311
+        },
+        {
+          "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+          "page": 315
+        },
+        {
+          "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+          "page": 316
+        }
+      ],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "No relevant gold pages. Counterchecks are possible confounders, never proof of exhaustive absence. Human confirmation of novel-only unanswerability is required."
+    },
+    "U03": {
+      "needs": [],
+      "context_only": [],
+      "counterchecks": [
+        {
+          "source": "harry-potter-1-lecole-des-sorciers.pdf",
+          "page": 134
+        },
+        {
+          "source": "harry-potter-2-la-chambre-des-secrets.pdf",
+          "page": 31
+        },
+        {
+          "source": "harry-potter-7-les-reliques-de-la-mort.pdf",
+          "page": 68
+        }
+      ],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "No relevant gold pages. Counterchecks are possible confounders, never proof of exhaustive absence. Human confirmation of novel-only unanswerability is required."
+    },
+    "U05": {
+      "needs": [],
+      "context_only": [],
+      "counterchecks": [
+        {
+          "source": "harry-potter-4-la-coupe-de-feu.pdf",
+          "page": 208
+        },
+        {
+          "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+          "page": 307
+        }
+      ],
+      "evidence_complete": false,
+      "human_review": "pending",
+      "notes": "No relevant gold pages. Counterchecks are possible confounders, never proof of exhaustive absence. Human confirmation of novel-only unanswerability is required."
+    }
+  }
+}
