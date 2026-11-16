@@ -1,0 +1,36 @@
+{
+  "source": "https://openrouter.ai/api/v1/models/baidu/ernie-5.5-flash-preview:free/endpoints",
+  "checked_utc": "2026-11-16T14:26:54.520577+00:00",
+  "data": {
+    "id": "baidu/ernie-5.5-flash-preview:free",
+    "endpoints": [
+      {
+        "name": "Baidu | baidu/ernie-5.5-flash-preview-20261110:free",
+        "model_id": "baidu/ernie-5.5-flash-preview:free",
+        "provider_name": "Baidu",
+        "tag": "baidu",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "top_p",
+          "max_tokens",
+          "response_format",
+          "structured_outputs",
+          "tools",
+          "tool_choice",
+          "reasoning_effort"
+        ],
+        "context_length": 1024000,
+        "max_prompt_tokens": null,
+        "max_completion_tokens": 921600,
+        "pricing": {
+          "prompt": "0",
+          "completion": "0",
+          "discount": 0
+        },
+        "status": 0
+      }
+    ]
+  }
+}

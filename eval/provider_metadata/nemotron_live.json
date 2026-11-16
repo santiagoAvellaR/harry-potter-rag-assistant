@@ -1,0 +1,36 @@
+{
+  "source": "https://openrouter.ai/api/v1/models/nvidia/nemotron-3.5-super-vl:free/endpoints",
+  "checked_utc": "2026-11-16T14:26:54.560754+00:00",
+  "data": {
+    "id": "nvidia/nemotron-3.5-super-vl:free",
+    "endpoints": [
+      {
+        "name": "Nvidia | nvidia/nemotron-3.5-super-vl-20261015:free",
+        "model_id": "nvidia/nemotron-3.5-super-vl:free",
+        "provider_name": "Nvidia",
+        "tag": "nvidia",
+        "supported_parameters": [
+          "reasoning",
+          "include_reasoning",
+          "temperature",
+          "max_tokens",
+          "seed",
+          "top_p",
+          "tools",
+          "tool_choice",
+          "response_format",
+          "structured_outputs"
+        ],
+        "context_length": 1000000,
+        "max_prompt_tokens": 868928,
+        "max_completion_tokens": 131072,
+        "pricing": {
+          "prompt": "0",
+          "completion": "0",
+          "discount": 0
+        },
+        "status": 0
+      }
+    ]
+  }
+}

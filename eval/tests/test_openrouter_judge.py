@@ -44,3 +44,13 @@ class OpenRouterTests(unittest.TestCase):
         self.assertEqual(d['retry_after_seconds'],60)
 
 if __name__=='__main__':unittest.main()
+
+class FixedLiveModelTests(unittest.TestCase):
+    def test_ernie_is_pinned_and_training_is_denied(self):
+        p=openrouter_payload('faith','Unchanged',{'provider_name':'Baidu','model_id':'baidu/ernie-5.5-flash-preview:free','supported_parameters':['structured_outputs','temperature']})
+        self.assertEqual(p['model'],'baidu/ernie-5.5-flash-preview:free')
+        self.assertEqual(p['provider']['order'],['Baidu'])
+        self.assertFalse(p['provider']['allow_fallbacks'])
+        self.assertEqual(p['provider']['data_collection'],'deny')
+    def test_automatic_routing_rejected(self):
+        with self.assertRaises(ValueError):openrouter_payload('faith','Q',{'provider_name':'Any','model_id':'openrouter/free'})

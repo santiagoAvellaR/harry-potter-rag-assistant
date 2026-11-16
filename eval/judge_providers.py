@@ -1,6 +1,7 @@
 """Evaluation-only judge adapters. No SDK retries or production modifications."""
 import json
 import os
+import time
 from pathlib import Path
 from eval.generation_runtime import InvalidJSON
 
@@ -84,14 +85,17 @@ def throughput_ok(estimate, tpm=8000):
 
 
 OPENROUTER_MODEL = 'qwen/qwen3.8-27b:free'
+OPENROUTER_FIXED_MODELS = (OPENROUTER_MODEL, 'baidu/ernie-5.5-flash-preview:free', 'nvidia/nemotron-3.5-super-vl:free')
 
 
 def openrouter_payload(stage, request, endpoint):
     """Use only advertised parameters; pin one endpoint and disable fallback."""
     params = endpoint.get('supported_parameters', [])
-    payload = {'model': OPENROUTER_MODEL, 'messages':[{'role':'user','content':request}],
+    model=endpoint.get('model_id',OPENROUTER_MODEL)
+    if model not in OPENROUTER_FIXED_MODELS:raise ValueError('Explicit fixed model required')
+    payload = {'model': model, 'messages':[{'role':'user','content':request}],
                'provider':{'order':[endpoint['provider_name']], 'allow_fallbacks':False,
-                           'require_parameters':True}}
+                           'require_parameters':True, 'data_collection':'deny'}}
     if 'temperature' in params:
         payload['temperature'] = 0
     if 'structured_outputs' in params:
@@ -150,6 +154,7 @@ def openrouter_judge(key, endpoint, cache, timeout=180, transport=None):
         remaining=account.json().get('data',{}).get('free_model_daily_requests',{}).get('remaining')
         if not isinstance(remaining,int):raise ValueError('Unverified OpenRouter remaining daily quota')
         budget.reserve(remaining)
+        started=time.monotonic()
         response=transport.post('https://openrouter.ai/api/v1/chat/completions',headers=headers,
                                 json=openrouter_payload(stage,request,endpoint))
         if response.status_code>=400:raise OpenRouterError(response)
@@ -158,6 +163,6 @@ def openrouter_judge(key, endpoint, cache, timeout=180, transport=None):
         try:verdict=json.loads(body['choices'][0]['message']['content'])
         except (KeyError,ValueError,TypeError,IndexError) as exc:raise InvalidJSON('Invalid OpenRouter JSON') from exc
         return {'verdict':verdict,'response_metadata':{'model_name':body.get('model'),
-            'provider':body.get('provider'),'system_fingerprint':body.get('system_fingerprint')},
+            'provider':body.get('provider'),'latency_seconds':time.monotonic()-started,'system_fingerprint':body.get('system_fingerprint')},
             'usage_metadata':body.get('usage',{})}
     return invoke
