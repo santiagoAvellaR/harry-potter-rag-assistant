@@ -1,0 +1,103 @@
+{
+  "question_id": "F01",
+  "provider": "openrouter",
+  "judge": {
+    "provider": "openrouter",
+    "model": "baidu/ernie-5.5-flash-preview:free",
+    "temperature": 0,
+    "schema_sha256": "cb0d77b22bcc062071b6b7ee42cd1699f55ba7ec80cc2f01cd554642efa741b2"
+  },
+  "generator": {
+    "model": "gemini-3.1-flash-lite",
+    "temperature": 0.2
+  },
+  "model_version": "unavailable until returned by API; alias not pinned",
+  "tokenizer": {
+    "name": "o200k_harmony",
+    "tiktoken_version": "0.14.0",
+    "limitation": "Cross-model proxy only for ERNIE/Nemotron; actual deployed tokenization and usage unknown"
+  },
+  "token_estimates": {
+    "faith": {
+      "content_bpe_tokens": 11757,
+      "schema_bpe_tokens": 152,
+      "estimated_input_tokens": 12037,
+      "overhead_allowance_tokens": 128
+    },
+    "accuracy": {
+      "content_bpe_tokens": 325,
+      "schema_bpe_tokens": 64,
+      "estimated_input_tokens": 517,
+      "overhead_allowance_tokens": 128
+    }
+  },
+  "free_tier_limits": {
+    "rpd": 50,
+    "rpm": 20,
+    "retry_reserve": 10,
+    "endpoint_tpm": null
+  },
+  "limit_source": "https://openrouter.ai/docs/api/reference/limits",
+  "limits_checked_utc": "2026-11-16T142953Z",
+  "context_sha256": "30f692f0c8257ca3245fcdfd3fd285d374642facca098c23d65c6532742ea26d",
+  "generation_payload_sha256": "d661111d24557cfe99da3aa09bceec661820f6211f80c08ccafb5f0926c3592b",
+  "dataset_sha256": "af757856ca15e47238b62bad62be746bbd47d76d49bad3a00ca75fe67e71510f",
+  "commit": "a8d3f5399973ef1d6ccea47c5dd659fddf81407e",
+  "code_sha256": {
+    "eval/judge_providers.py": "1f1a2f264f80bee9adbeae562e1224e73addde3c1aad05eb7f3c7e9669815a64",
+    "eval/run_alternative_judge.py": "0a98154f2bced70d5eb3b96554e00ea63073415f676634a65797cb1ceb17f5ab"
+  },
+  "live_calls": 0,
+  "stages": {},
+  "new_generation_calls": 0,
+  "new_retrieval_calls": 0,
+  "endpoint_metadata": {
+    "source": "https://openrouter.ai/api/v1/models/baidu/ernie-5.5-flash-preview:free/endpoints",
+    "checked_utc": "2026-11-16T14:26:54.520577+00:00",
+    "data": {
+      "id": "baidu/ernie-5.5-flash-preview:free",
+      "endpoints": [
+        {
+          "name": "Baidu | baidu/ernie-5.5-flash-preview-20261110:free",
+          "model_id": "baidu/ernie-5.5-flash-preview:free",
+          "provider_name": "Baidu",
+          "tag": "baidu",
+          "supported_parameters": [
+            "reasoning",
+            "include_reasoning",
+            "temperature",
+            "top_p",
+            "max_tokens",
+            "response_format",
+            "structured_outputs",
+            "tools",
+            "tool_choice",
+            "reasoning_effort"
+          ],
+          "context_length": 1024000,
+          "max_prompt_tokens": null,
+          "max_completion_tokens": 921600,
+          "pricing": {
+            "prompt": "0",
+            "completion": "0",
+            "discount": 0
+          },
+          "status": 0
+        }
+      ]
+    }
+  },
+  "execution_status": "blocked_unknown_or_insufficient_endpoint_tpm",
+  "input_throughput_compatible": null,
+  "credential_present": false,
+  "account_quotas_verified": false,
+  "response_token_usage": null,
+  "inference_latency_seconds": null,
+  "data_practices_cleared": false,
+  "inference_blockers": [
+    "Unverified provider TPM",
+    "Missing API credentials/account quota verification",
+    "Baidu terms sections 3A.3.1-3A.3.2 permit content storage and ML improvement; no specific exception verified"
+  ],
+  "original_success_entries_preserved": 12
+}

@@ -82,3 +82,5 @@ usage/latency before considering homogeneous full-provider judging. With 90
 judgments needed before retries, a 40-request/day operating budget would require
 at least three quota days if no judgments were reusable; this is planning arithmetic,
 not a verified account throughput result.
+
+Final measured preflight: [2026-11-16T142953Z_openrouter_preflight.json](alternative_judge_results/2026-11-16T142953Z_openrouter_preflight.json). All 12 original cache successes remained unchanged.
