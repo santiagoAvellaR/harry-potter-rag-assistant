@@ -88,10 +88,12 @@ What exists:
 - `src/RAG/evaluation.py` implements an LLM-as-a-judge audit for faithfulness and answer relevance.
 - `src/research_engine/evaluation.py` contains an experimental classical-IR evaluation script, but its manually curated ground truth is incomplete unless an external `ground_truth.json` is provided.
 
-What does not exist:
+Benchmark status:
 
-- No human-labelled RAG benchmark is included.
-- No validated numeric RAG accuracy, retrieval accuracy, or faithfulness percentage is established.
+- An individual follow-up retrieval benchmark now evaluates 42 answerable questions from 45 owner-approved questions, using AI-authored evidence labels that were not independently checked page by page by the owner.
+- MMR flat Recall@12 is **0.250 [0.137, 0.375]**; cosine is **0.294 [0.173, 0.425]** (95% question-bootstrap intervals). The production BM25-inspired pipeline scores zero, largely because its boolean prefilter returns no candidates.
+- Full methodology, category results, evidence-need coverage and limitations: [retrieval benchmark results](eval/RESULTS.md). This work was completed individually after the team project.
+- Generation accuracy and faithfulness have not been benchmarked.
 - The LLM-judge scores shown in the Streamlit UI are runtime diagnostic signals, not defensible benchmark performance metrics.
 
 The final system worked end-to-end in practical tests, but exact or very broad narrative questions can still fail when useful information is split across chunks or does not rank highly enough.
@@ -213,8 +215,8 @@ Before publishing to GitHub, remove tracked copyrighted corpus files from Git an
 
 - Academic prototype, not a production AI system.
 - No model training or fine-tuning.
-- No annotated RAG benchmark.
-- Retrieval settings were selected through qualitative testing, not a defensible quantitative benchmark.
+- Retrieval benchmark evidence is AI-authored/AI-checked; owner approval covers question selection and wording, not independent verification of every evidence page.
+- Retrieval settings were selected through qualitative testing; the later frozen benchmark measures that configuration without tuning against its results.
 - Retrieval is sensitive to chunk boundaries and ranking.
 - Exact or broad narrative questions can fail when relevant passages are missing from the retrieved context.
 - External Gemini dependency for generation and LLM-based evaluation.

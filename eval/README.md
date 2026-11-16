@@ -170,3 +170,18 @@ preparation. Dependency setup and runtime verification belong to the next phase.
 and metric tests, freeze the dataset hash and runtime configuration, and run the
 existing pipeline unchanged. Only real completed executions may populate
 `RESULTS.md`, result JSON files, or the root README's benchmark summary.
+
+## Phase 2A retrieval execution
+
+Santiago approved selection/wording of the 45 questions on 2026-11-16; see
+[dataset_freeze.json](dataset_freeze.json) for scope. Selected statuses are
+`validated`; evidence `human_review` remains pending. The historical phase-1b
+change log stays bound to its original pre-freeze dataset, while the annotation
+sidecar and freeze bind to the current dataset hash. No wording or flat-reference
+changes accompanied the status transition.
+
+The retrieval CLI is `run_benchmark.py`, with frozen baseline settings in
+`config.yaml`. `metrics.py` implements historical flat metrics and the separate
+evidence-need/all-needs coverage measures. `tests/` has hand-calculated cases.
+No generation or judge code is included. See [RESULTS.md](RESULTS.md) for actual
+execution results and limitations when available.

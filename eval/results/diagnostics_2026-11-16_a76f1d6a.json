@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "run_file": "2026-11-16T093849Z_a76f1d6a.json",
+  "reviewed_utc": "2026-11-16T10:06:42.399048+00:00",
+  "scope": "Post-run inspection only; no parameter/label changes and no new benchmark aggregate. No corpus passages included.",
+  "mmr_F13_candidate_replay": {
+    "question": "F13",
+    "original_top12_reproduced": true,
+    "gold_page_candidates": [
+      {
+        "candidate_rank": 5,
+        "selected": false,
+        "page": 318,
+        "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+        "chunk_sha256": "4f5079d6e033b23799b04e24e044690d36dbfad1c5baa6e37a0611a649000361"
+      },
+      {
+        "candidate_rank": 31,
+        "selected": false,
+        "page": 318,
+        "source": "harry-potter-6-le-prince-de-sang-mecc82lecc81.pdf",
+        "chunk_sha256": "d38ac6878fbdf2d2bd8e27f3bb390a7df46659c24ec3fd853aed139bb3e2e32c"
+      }
+    ],
+    "fetch_k": 50,
+    "k": 12,
+    "lambda_mult": 0.5
+  },
+  "token_window_inspection": [
+    {
+      "book": 6,
+      "pdf_page": 319,
+      "chunk_chars": 2401,
+      "tokens_without_special": 704,
+      "needle": "sept",
+      "needle_token_positions_1based": []
+    },
+    {
+      "book": 6,
+      "pdf_page": 319,
+      "chunk_chars": 861,
+      "tokens_without_special": 246,
+      "needle": "sept",
+      "needle_token_positions_1based": [
+        159,
+        180,
+        199,
+        243
+      ]
+    },
+    {
+      "book": 5,
+      "pdf_page": 102,
+      "chunk_chars": 2471,
+      "tokens_without_special": 688,
+      "needle": "six",
+      "needle_token_positions_1based": [
+        589
+      ]
+    },
+    {
+      "book": 5,
+      "pdf_page": 102,
+      "chunk_chars": 614,
+      "tokens_without_special": 174,
+      "needle": "six",
+      "needle_token_positions_1based": [
+        21
+      ]
+    },
+    {
+      "book": 1,
+      "pdf_page": 95,
+      "chunk_chars": 2482,
+      "tokens_without_special": 700,
+      "needle": "aconit",
+      "needle_token_positions_1based": [
+        332
+      ]
+    },
+    {
+      "book": 1,
+      "pdf_page": 95,
+      "chunk_chars": 797,
+      "tokens_without_special": 228,
+      "needle": "aconit",
+      "needle_token_positions_1based": []
+    }
+  ],
+  "production_classic_query_diagnostics": {
+    "F07": {
+      "structured": {
+        "rubric": null,
+        "search_field": null,
+        "date_min": null,
+        "date_max": null,
+        "mois_inclus": [],
+        "mois_exclus": [],
+        "image": null,
+        "operateur": [],
+        "keywords": [
+          "voit",
+          "hermion",
+          "fac",
+          "épouvantard",
+          "pend",
+          "examen",
+          "pratiqu",
+          "lupin"
+        ],
+        "highlight_keywords": [
+          "voit",
+          "hermione",
+          "face",
+          "épouvantard",
+          "pendant",
+          "examen",
+          "pratique",
+          "lupin"
+        ],
+        "equation": "voit hermion fac épouvantard pend examen pratiqu lupin"
+      },
+      "term_page_counts": {
+        "voit": 66,
+        "hermion": 1539,
+        "fac": 286,
+        "épouvantard": 28,
+        "pend": 944,
+        "examen": 113,
+        "pratiqu": 109,
+        "lupin": 258
+      },
+      "missing_terms_on_gold": {
+        "3210": [
+          "voit",
+          "pend",
+          "pratiqu"
+        ]
+      },
+      "returned_ids": []
+    },
+    "F10": {
+      "structured": {
+        "rubric": null,
+        "search_field": null,
+        "date_min": null,
+        "date_max": null,
+        "mois_inclus": [],
+        "mois_exclus": [],
+        "image": null,
+        "operateur": [],
+        "keywords": [
+          "plum",
+          "ombrag",
+          "harry",
+          "pend",
+          "se",
+          "retenu"
+        ],
+        "highlight_keywords": [
+          "plume",
+          "ombrage",
+          "harry",
+          "pendant",
+          "ses",
+          "retenues"
+        ],
+        "equation": "plum ombrag harry pend se retenu"
+      },
+      "term_page_counts": {
+        "plum": 196,
+        "ombrag": 216,
+        "harry": 2589,
+        "pend": 944,
+        "se": 2634,
+        "retenu": 106
+      },
+      "missing_terms_on_gold": {
+        "5216": [
+          "pend",
+          "retenu"
+        ]
+      },
+      "returned_ids": [
+        "5221",
+        "5226"
+      ]
+    },
+    "M03": {
+      "structured": {
+        "rubric": null,
+        "search_field": null,
+        "date_min": null,
+        "date_max": null,
+        "mois_inclus": [],
+        "mois_exclus": [],
+        "image": null,
+        "operateur": [
+          "AND"
+        ],
+        "keywords": [
+          "quoi",
+          "jedusor",
+          "accept",
+          "précis",
+          "hagrid",
+          "souven",
+          "tromp",
+          "harry",
+          "comment",
+          "expliqu",
+          "ensuit",
+          "rôl",
+          "ginny",
+          "nouvel",
+          "attaqu"
+        ],
+        "highlight_keywords": [
+          "quoi",
+          "jedusor",
+          "accuse-t-il",
+          "précisément",
+          "hagrid",
+          "souvenir",
+          "trompe",
+          "harry",
+          "comment",
+          "explique-t-il",
+          "ensuite",
+          "rôle",
+          "ginny",
+          "nouvelles",
+          "attaques"
+        ],
+        "equation": "quoi jedusor accept précis hagrid souven tromp harry AND comment expliqu ensuit rôl ginny nouvel attaqu"
+      },
+      "term_page_counts": {
+        "quoi": 718,
+        "jedusor": 87,
+        "accept": 125,
+        "précis": 105,
+        "hagrid": 492,
+        "souven": 246,
+        "tromp": 101,
+        "harry": 2589,
+        "comment": 840,
+        "expliqu": 379,
+        "ensuit": 219,
+        "rôl": 50,
+        "ginny": 362,
+        "nouvel": 409,
+        "attaqu": 248
+      },
+      "missing_terms_on_gold": {
+        "2128": [
+          "quoi",
+          "accept",
+          "précis",
+          "hagrid",
+          "souven",
+          "tromp",
+          "comment",
+          "expliqu",
+          "ensuit",
+          "rôl",
+          "ginny",
+          "nouvel",
+          "attaqu"
+        ],
+        "2129": [
+          "quoi",
+          "accept",
+          "précis",
+          "souven",
+          "tromp",
+          "comment",
+          "expliqu",
+          "ensuit",
+          "rôl",
+          "ginny",
+          "attaqu"
+        ],
+        "2161": [
+          "quoi",
+          "accept",
+          "précis",
+          "tromp",
+          "comment",
+          "expliqu",
+          "ensuit",
+          "rôl",
+          "nouvel"
+        ]
+      },
+      "returned_ids": []
+    }
+  }
+}
