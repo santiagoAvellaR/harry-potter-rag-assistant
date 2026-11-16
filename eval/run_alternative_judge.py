@@ -20,8 +20,9 @@ from eval.judge_providers import credential, make_judge, schema, token_estimate,
 def main():
     import yaml
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--provider',choices=['groq','gemini'],default='groq')
+    parser.add_argument('--provider',choices=['groq','gemini','openrouter'],default='groq')
     parser.add_argument('--question',default='F01')
+    parser.add_argument('--endpoint-snapshot',type=Path,help='Previously inspected public OpenRouter endpoint metadata')
     parser.add_argument('--smoke',action='store_true',help='At most two judge attempts; otherwise offline preflight only')
     args=parser.parse_args()
     cfg=yaml.safe_load((ROOT/'eval/generation_config.yaml').read_text())
@@ -51,8 +52,24 @@ def main():
     estimates={stage:token_estimate(stage,judge_request(prompt,inputs[stage]),encoding)
                for stage,prompt in [('faith',FAITH_PROMPT),('accuracy',ACCURACY_PROMPT)]}
     provider=args.provider
-    judge={'provider':provider,'model':'openai/gpt-oss-120b' if provider=='groq' else 'gemini-3.8-flash',
-           'temperature':0,'schema_sha256':fingerprint({s:schema(s) for s in estimates}) if provider=='groq' else None}
+    qwen_manifest=None
+    if provider=='openrouter':
+        from tokenizers import Tokenizer
+        directory=ROOT/'data/output/eval/tokenizers/qwen3.8-27b'
+        qwen_manifest=json.loads((directory/'manifest.json').read_text())
+        for name,digest in qwen_manifest['files'].items():
+            if sha(directory/name)!=digest:raise ValueError('Tokenizer fingerprint mismatch')
+        tokenizer=Tokenizer.from_file(str(directory/'tokenizer.json'))
+        estimates={}
+        for stage,prompt in [('faith',FAITH_PROMPT),('accuracy',ACCURACY_PROMPT)]:
+            request=judge_request(prompt,inputs[stage])
+            content=len(tokenizer.encode(request,add_special_tokens=False).ids)
+            schema_count=len(tokenizer.encode(json.dumps(schema(stage)),add_special_tokens=False).ids)
+            estimates[stage]={'content_qwen_tokens':content,'schema_qwen_tokens':schema_count,
+                'estimated_input_tokens':content+schema_count+128,'overhead_allowance_tokens':128,
+                'request_characters':len(request),'request_sha256':fingerprint(request)}
+    judge={'provider':provider,'model':{'groq':'openai/gpt-oss-120b','gemini':'gemini-3.8-flash','openrouter':'qwen/qwen3.8-27b:free'}[provider],
+           'temperature':0,'schema_sha256':fingerprint({s:schema(s) for s in estimates}) if provider in ('groq','openrouter') else None}
     metadata={**anchor['model_access'],'judge':{'metadata':{'name':judge['model'],'version':None}}}
     stamp=datetime.now(timezone.utc).strftime('%Y-%m-%dT%H%M%SZ')
     record={'question_id':q['id'],'provider':provider,'judge':judge,'generator':cfg['generator'],
@@ -64,21 +81,50 @@ def main():
         'dataset_sha256':freeze['questions_sha256'],'commit':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
         'code_sha256':{p:sha(ROOT/p) for p in ['eval/judge_providers.py','eval/run_alternative_judge.py']},
         'live_calls':0,'stages':{},'new_generation_calls':0,'new_retrieval_calls':0}
-    compatible=all(throughput_ok(v) for v in estimates.values())
+    endpoint=None
+    gate=None
+    if provider=='openrouter':
+        from eval.judge_providers import endpoint_gate, OPENROUTER_MODEL
+        snapshot=json.loads(args.endpoint_snapshot.read_text()) if args.endpoint_snapshot else {'data':{'id':OPENROUTER_MODEL,'endpoints':[]}}
+        if snapshot['data']['id']!=OPENROUTER_MODEL:raise ValueError('Fixed model metadata required')
+        if args.smoke:
+            import httpx
+            response=httpx.get('https://openrouter.ai/api/v1/models/qwen/qwen3.8-27b:free/endpoints',timeout=30)
+            response.raise_for_status()
+            # Refresh before a live smoke; never trust a stale endpoint snapshot for routing.
+            body=response.json()['data']
+            snapshot={'source':'live OpenRouter endpoint metadata','data':{'id':body['id'],'endpoints':[
+                {k:e[k] for k in ('provider_name','supported_parameters','context_length','rate_limits') if k in e}
+                for e in body.get('endpoints',[])]}}
+        endpoints=snapshot['data'].get('endpoints',[])
+        gate=endpoint_gate(endpoints,max(e['estimated_input_tokens'] for e in estimates.values()))
+        record['endpoint_metadata']=snapshot
+        record['tokenizer']={**qwen_manifest,'limitation':'Exact local content tokens; server chat/schema overhead and output unknown'}
+        record['free_tier_limits']={'rpd':50,'rpm':20,'retry_reserve':10,'endpoint_tpm':None}
+        record['limit_source']='https://openrouter.ai/docs/api/reference/limits'
+        if gate=='eligible':
+            endpoint=next(e for e in endpoints if (e.get('rate_limits') or {}).get('tokens_per_minute',0)>=max(v['estimated_input_tokens'] for v in estimates.values()))
+            judge['endpoint']={k:endpoint[k] for k in ('provider_name','supported_parameters') if k in endpoint}
+            judge['response_format_policy']='advertised_parameters_only'
+        else:
+            record['execution_status']=gate
+    compatible=None if provider=='openrouter' else all(throughput_ok(v) for v in estimates.values())
     record['input_throughput_compatible']=compatible
-    record['execution_status']='preflight_only'
+    record['execution_status']=gate if gate and gate!='eligible' else 'preflight_only'
     if provider=='groq' and not compatible:
         record['execution_status']='blocked_input_exceeds_published_free_tier_tpm'
+    elif provider=='openrouter' and gate!='eligible':
+        pass
     elif args.smoke:
         key=credential(provider,ROOT)
         if not key:record['execution_status']='blocked_missing_credentials'
         else:
             # Provider-qualified scope isolates operational cooldowns as well as scores.
-            scoped=provider+':'+judge['model'] if provider=='groq' else judge['model']
+            scoped=provider+':'+judge['model'] if provider in ('groq','openrouter') else judge['model']
             op={**cfg,'judge':judge,'max_attempts':1,'rate_limit_seconds':65,
                 'per_model_min_interval_seconds':{judge['model']:65},'tokens_per_minute':{}}
             caller=Caller(cache,op,max_live_calls=2,progress=progress_logger({}))
-            invoke=make_judge(provider,key,cfg['timeout_seconds'])
+            invoke=make_judge(provider,key,cfg['timeout_seconds'],endpoint=endpoint,cache=cache)
             # evaluate_judges passes the model as scope. Prefix only the operational scope.
             original_call=caller.call
             def qualified_call(*a,**kw):
@@ -86,7 +132,7 @@ def main():
                 return original_call(*a,**kw)
             caller.call=qualified_call
             stages=evaluate_judges(q,context,answer,common,op,metadata,
-                json.loads((ROOT/'eval/evidence_annotations.json').read_text())['annotations'][q['id']]['notes'],caller,invoke)
+                json.loads((ROOT/'eval/evidence_annotations.json').read_text())['annotations'][q['id']]['notes'],caller,invoke,stop_on_error=(provider=='openrouter'))
             record.update(stages=public_stages(stages),live_calls=caller.live_calls,
                 execution_status='completed' if all('verdict' in v for v in stages.values()) else 'incomplete')
     after=success_inventory(cache)

@@ -1,0 +1,11 @@
+{
+  "source": "https://openrouter.ai/api/v1/models/qwen/qwen3.8-27b:free/endpoints",
+  "checked_date": "2026-11-16",
+  "capture_method": "public endpoint inspected via web tool; description omitted",
+  "data": {
+    "id": "qwen/qwen3.8-27b:free",
+    "name": "Qwen: Qwen3.8 27B",
+    "architecture": {"tokenizer": "Qwen"},
+    "endpoints": []
+  }
+}
