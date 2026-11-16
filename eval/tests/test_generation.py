@@ -6,7 +6,7 @@ import unittest
 from unittest.mock import patch
 from eval.generation_core import (CallCache,Caller,CallError,InvalidJudge,fingerprint,
  validate_faith,validate_accuracy,faith_score,aggregate,audit_ids)
-from eval.run_generation import safe_answer, write_outputs
+from eval.run_generation import safe_answer, write_outputs, package_versions
 
 CFG={'max_attempts':3,'rate_limit_seconds':0,'backoff_seconds':2,'max_backoff_seconds':3}
 
@@ -16,6 +16,16 @@ def faith(claims=(),abstains=False,appropriate=False):
 
 
 class GenerationTest(unittest.TestCase):
+    def test_missing_optional_package_is_recorded(self):
+        import importlib.metadata
+        def version(name):
+            if name == 'optional':
+                raise importlib.metadata.PackageNotFoundError(name)
+            return '1.0'
+        with patch('eval.run_generation.importlib.metadata.version',side_effect=version):
+            self.assertEqual(package_versions(['installed','optional']),
+                             {'installed':'1.0','optional':None})
+
     def test_claim_ratio_uncertain_in_denominator(self):
         v=validate_faith(faith(['supported','uncertain','unsupported']),1)
         self.assertEqual(faith_score(v),1/3)

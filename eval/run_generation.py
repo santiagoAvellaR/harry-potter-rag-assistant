@@ -48,6 +48,17 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def package_versions(names):
+    """An optional wrapper missing from this environment is metadata, not a crash."""
+    versions = {}
+    for name in names:
+        try:
+            versions[name] = importlib.metadata.version(name)
+        except importlib.metadata.PackageNotFoundError:
+            versions[name] = None
+    return versions
+
+
 def api_key():
     # Only read these named values. Never log, serialize or include them in cache bindings.
     from dotenv import dotenv_values
@@ -174,7 +185,7 @@ def main():
         'corpus_manifest_sha256':sha(ROOT/'eval/corpus_manifest.json'),
         'retrieval_config':yaml.safe_load((ROOT/'eval/config.yaml').read_text()),
         'code_sha256':{str(p.relative_to(ROOT) if p.is_relative_to(ROOT) else p.name):sha(p) for p in [ROOT/'src/RAG/chain.py',ROOT/'eval/run_generation.py',ROOT/'eval/generation_core.py',args.config]},
-        'python':sys.version,'packages':{n:importlib.metadata.version(n) for n in ['langchain-google-genai','langchain-core','google-genai','chromadb','langchain-chroma','langchain-huggingface','sentence-transformers','torch','numpy','PyYAML','python-dotenv']},
+        'python':sys.version,'packages':package_versions(['langchain-google-genai','langchain-core','google-genai','chromadb','langchain-community','langchain-chroma','langchain-huggingface','sentence-transformers','torch','numpy','PyYAML','python-dotenv']),
         'execution_status':'blocked','model_access':{},'questions':[{'id':q['id'],'category':q['category'],'generation_status':'not_attempted','faith':None,'accuracy':None,'errors':[]} for q in questions]}
     local_records={};outdir=ROOT/'eval/generation_results';outdir.mkdir(exist_ok=True)
     output=outdir/f"{now.strftime('%Y-%m-%dT%H%M%SZ')}_{commit[:8]}.json"
