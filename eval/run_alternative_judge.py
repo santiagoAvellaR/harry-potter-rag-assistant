@@ -74,7 +74,7 @@ def main():
         if not key:record['execution_status']='blocked_missing_credentials'
         else:
             # Provider-qualified scope isolates operational cooldowns as well as scores.
-            scoped=provider+':'+judge['model']
+            scoped=provider+':'+judge['model'] if provider=='groq' else judge['model']
             op={**cfg,'judge':judge,'max_attempts':1,'rate_limit_seconds':65,
                 'per_model_min_interval_seconds':{judge['model']:65},'tokens_per_minute':{}}
             caller=Caller(cache,op,max_live_calls=2,progress=progress_logger({}))

@@ -44,8 +44,9 @@ only judge configuration changes, never generation identity or successful payloa
 
 No provider SDK retry layer is introduced. Groq's HTTP status and Retry-After feed
 the existing bounded retry/cooldown logic. Explicit TPD/RPD exhaustion is classified
-as daily quota; TPM throttling remains retryable. Operational cooldown scopes use
-provider:model, so Gemini exhaustion cannot block Groq. Smoke is one attempt per
+as daily quota; TPM throttling remains retryable. Groq operational cooldown scopes use
+provider:model, so Gemini exhaustion cannot block Groq. Gemini retains its original
+model scope to honor existing persisted cooldowns. Smoke is one attempt per
 stage, two total, with 65-second spacing and persistent cooldowns; explicit daily
 exhaustion stops the second attempt. Response model alias, optional system
 fingerprint and actual token usage are retained when available. These are not
@@ -97,3 +98,5 @@ throughput gate, plus existing cache/retry/metric tests. The API adapter was tes
 with a fake HTTP transport; this does not establish live model availability.
 Code and token-only results are versioned; contexts, generated answers, keys,
 private semantic manifests and token vocabulary stay outside committed artifacts.
+
+Latest committed-source token preflight: [2026-11-16T135941Z_groq_preflight.json](alternative_judge_results/2026-11-16T135941Z_groq_preflight.json).

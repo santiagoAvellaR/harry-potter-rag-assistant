@@ -1,0 +1,56 @@
+{
+  "question_id": "F01",
+  "provider": "groq",
+  "judge": {
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "temperature": 0,
+    "schema_sha256": "cb0d77b22bcc062071b6b7ee42cd1699f55ba7ec80cc2f01cd554642efa741b2"
+  },
+  "generator": {
+    "model": "gemini-3.1-flash-lite",
+    "temperature": 0.2
+  },
+  "model_version": "unavailable until returned by API; alias not pinned",
+  "tokenizer": {
+    "name": "o200k_harmony",
+    "tiktoken_version": "0.14.0"
+  },
+  "token_estimates": {
+    "faith": {
+      "content_bpe_tokens": 11757,
+      "schema_bpe_tokens": 152,
+      "estimated_input_tokens": 12037,
+      "overhead_allowance_tokens": 128
+    },
+    "accuracy": {
+      "content_bpe_tokens": 325,
+      "schema_bpe_tokens": 64,
+      "estimated_input_tokens": 517,
+      "overhead_allowance_tokens": 128
+    }
+  },
+  "free_tier_limits": {
+    "tpm": 8000,
+    "tpd": 200000,
+    "rpm": 30,
+    "rpd": 1000
+  },
+  "limit_source": "https://console.groq.com/docs/rate-limits",
+  "limits_checked_utc": "2026-11-16T135700Z",
+  "context_sha256": "30f692f0c8257ca3245fcdfd3fd285d374642facca098c23d65c6532742ea26d",
+  "generation_payload_sha256": "d661111d24557cfe99da3aa09bceec661820f6211f80c08ccafb5f0926c3592b",
+  "dataset_sha256": "af757856ca15e47238b62bad62be746bbd47d76d49bad3a00ca75fe67e71510f",
+  "commit": "5835aac5d1acd99113349e9129421b2c2e9c7ff3",
+  "code_sha256": {
+    "eval/judge_providers.py": "5f668386908eed1c3f7a02da5fd2db371bd06f150fb61770e3db5e77495c7c7c",
+    "eval/run_alternative_judge.py": "410d278c85d71f223aebc75c66fc3f586a92d220eed3699be9f4012a6c4c9148"
+  },
+  "live_calls": 0,
+  "stages": {},
+  "new_generation_calls": 0,
+  "new_retrieval_calls": 0,
+  "input_throughput_compatible": false,
+  "execution_status": "blocked_input_exceeds_published_free_tier_tpm",
+  "original_success_entries_preserved": 12
+}
