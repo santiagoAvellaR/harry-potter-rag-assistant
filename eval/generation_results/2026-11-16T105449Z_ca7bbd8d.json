@@ -1,0 +1,705 @@
+{
+  "schema_version": 1,
+  "started_utc": "2026-11-16T10:54:49.688080+00:00",
+  "commit": "ca7bbd8d4e50db796afbe51af02055b0236c616c",
+  "config": {
+    "schema_version": 1,
+    "seed": 42,
+    "generator": {
+      "model": "gemini-3.1-flash-lite",
+      "temperature": 0.2
+    },
+    "judge": {
+      "model": "gemini-2.5-flash",
+      "temperature": 0
+    },
+    "rate_limit_seconds": 5,
+    "max_attempts": 3,
+    "backoff_seconds": 5,
+    "max_backoff_seconds": 40,
+    "timeout_seconds": 90,
+    "bootstrap_samples": 10000,
+    "cache": "data/output/eval/generation/cache.sqlite3",
+    "retrieval_result": "eval/results/2026-11-16T093849Z_a76f1d6a.json"
+  },
+  "dataset_sha256": "af757856ca15e47238b62bad62be746bbd47d76d49bad3a00ca75fe67e71510f",
+  "annotations_sha256": "ff1b84566f208d0942294087bf1fb22eb4ecc2d3d7af842cb286d8d85b517e2c",
+  "phase2a_result_sha256": "09d9c8cb1961dd7430b5908380ff67ea79528513c0091c634dbd498b02c6e173",
+  "corpus_manifest_sha256": "2f6bd4afe79ee1c386f2bc91c17ae43ee5d4f9ced0b31bec0db1e1b77750b8a5",
+  "retrieval_config": {
+    "schema_version": 1,
+    "seed": 42,
+    "ks": [
+      1,
+      3,
+      5,
+      12
+    ],
+    "retrieval_depth": 12,
+    "bootstrap": {
+      "samples": 10000,
+      "confidence": 0.95,
+      "method": "percentile_question_resampling"
+    },
+    "embedding": {
+      "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+      "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+      "device": "cpu",
+      "normalize_embeddings": false
+    },
+    "chunking": {
+      "size": 2500,
+      "overlap": 500,
+      "separators": [
+        "\n\n",
+        "\n",
+        ".",
+        " ",
+        ""
+      ]
+    },
+    "chroma": {
+      "path": "data/output/eval/retrieval_index",
+      "collection": "langchain",
+      "distance": "cosine",
+      "mmr": {
+        "k": 12,
+        "fetch_k": 50,
+        "lambda_mult": 0.5
+      }
+    },
+    "classic": {
+      "enabled": true,
+      "preprocessing": "production_TD1_TD2_TD3",
+      "query": "production_SearchEngineBridge",
+      "score": "production_BM25_inspired_no_length_normalization",
+      "tie_break": "ascending_numeric_document_id"
+    },
+    "runtime": {
+      "threads": 1,
+      "offline": true
+    }
+  },
+  "code_sha256": {
+    "src/RAG/chain.py": "b10fe0e7a4da68b701c54237e025ee6685831f6888eb92751ae7b0cfaf3f2782",
+    "eval/run_generation.py": "2d89c79c89b887d579716eac907f4fd20b3698d0b948d1054dc89a75b5764b1d",
+    "eval/generation_core.py": "db9c1cfaca2573e4b3f5a4b218a17606f46d4c0110da39c703861cbc23147d33",
+    "eval/generation_config.yaml": "b7b0fe465d91c456105bcbb2e75bc7df7b1268f1415da2511f9dba1f7b8f820c"
+  },
+  "python": "3.11.15 | packaged by conda-forge | (main, Jun 11 2026, 03:34:02) [GCC 14.3.0]",
+  "packages": {
+    "langchain-google-genai": "4.2.5",
+    "langchain-core": "1.4.6",
+    "google-genai": "2.8.0",
+    "chromadb": "1.5.9",
+    "langchain-community": "0.4.2",
+    "langchain-chroma": null,
+    "langchain-huggingface": "1.2.2",
+    "sentence-transformers": "5.5.1",
+    "torch": "2.12.0",
+    "numpy": "2.4.6",
+    "PyYAML": "6.0.3",
+    "python-dotenv": "1.2.2"
+  },
+  "execution_status": "blocked",
+  "model_access": {},
+  "questions": [
+    {
+      "id": "F01",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F03",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F04",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F06",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F07",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F08",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F09",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F10",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F12",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F13",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "F14",
+      "category": "factual_simple",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "R01",
+      "category": "rare_detail",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "R03",
+      "category": "rare_detail",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "R04",
+      "category": "rare_detail",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "R05",
+      "category": "rare_detail",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "R07",
+      "category": "rare_detail",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "R09",
+      "category": "rare_detail",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "R10",
+      "category": "rare_detail",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "R11",
+      "category": "rare_detail",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "R12",
+      "category": "rare_detail",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M01",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M02",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M03",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M04",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M05",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M06",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M08",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M09",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M10",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "M11",
+      "category": "multi_passage",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "C02",
+      "category": "cross_book",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "C03",
+      "category": "cross_book",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "C04",
+      "category": "cross_book",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "C05",
+      "category": "cross_book",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "C06",
+      "category": "cross_book",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "C07",
+      "category": "cross_book",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "C09",
+      "category": "cross_book",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "P01",
+      "category": "paraphrase",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "P02",
+      "category": "paraphrase",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "P04",
+      "category": "paraphrase",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "P05",
+      "category": "paraphrase",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "P06",
+      "category": "paraphrase",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "U01",
+      "category": "unanswerable",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "U03",
+      "category": "unanswerable",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    },
+    {
+      "id": "U05",
+      "category": "unanswerable",
+      "generation_status": "not_run_missing_credentials",
+      "faith": null,
+      "accuracy": null,
+      "errors": []
+    }
+  ],
+  "stop_reason": "missing_credentials: no GOOGLE_API_KEY/GEMINI_API_KEY in environment or local .env",
+  "summary": {
+    "global": {
+      "planned": 45,
+      "generated": 0,
+      "generation_completion_percent": 0.0,
+      "faith_judged": 0,
+      "faith_missing": 45,
+      "no_factual_claims": 0,
+      "faithfulness": {
+        "n": 0,
+        "metrics": {}
+      },
+      "claim_verdict_counts": {},
+      "accuracy_judged": 0,
+      "accuracy_missing": 45,
+      "accuracy_counts": {
+        "correct": 0,
+        "partial": 0,
+        "incorrect": 0,
+        "abstained": 0
+      },
+      "accuracy_percent_of_judged": {
+        "correct": null,
+        "partial": null,
+        "incorrect": null,
+        "abstained": null
+      },
+      "judge_abstention_disagreements": 0,
+      "negative_missing": 3,
+      "negative_planned": 3,
+      "negative_judged": 0,
+      "appropriate_abstentions": 0,
+      "abstention_percent_of_judged": null
+    },
+    "categories": {
+      "cross_book": {
+        "planned": 7,
+        "generated": 0,
+        "generation_completion_percent": 0.0,
+        "faith_judged": 0,
+        "faith_missing": 7,
+        "no_factual_claims": 0,
+        "faithfulness": {
+          "n": 0,
+          "metrics": {}
+        },
+        "claim_verdict_counts": {},
+        "accuracy_judged": 0,
+        "accuracy_missing": 7,
+        "accuracy_counts": {
+          "correct": 0,
+          "partial": 0,
+          "incorrect": 0,
+          "abstained": 0
+        },
+        "accuracy_percent_of_judged": {
+          "correct": null,
+          "partial": null,
+          "incorrect": null,
+          "abstained": null
+        },
+        "judge_abstention_disagreements": 0,
+        "negative_missing": 0,
+        "negative_planned": 0,
+        "negative_judged": 0,
+        "appropriate_abstentions": 0,
+        "abstention_percent_of_judged": null
+      },
+      "factual_simple": {
+        "planned": 11,
+        "generated": 0,
+        "generation_completion_percent": 0.0,
+        "faith_judged": 0,
+        "faith_missing": 11,
+        "no_factual_claims": 0,
+        "faithfulness": {
+          "n": 0,
+          "metrics": {}
+        },
+        "claim_verdict_counts": {},
+        "accuracy_judged": 0,
+        "accuracy_missing": 11,
+        "accuracy_counts": {
+          "correct": 0,
+          "partial": 0,
+          "incorrect": 0,
+          "abstained": 0
+        },
+        "accuracy_percent_of_judged": {
+          "correct": null,
+          "partial": null,
+          "incorrect": null,
+          "abstained": null
+        },
+        "judge_abstention_disagreements": 0,
+        "negative_missing": 0,
+        "negative_planned": 0,
+        "negative_judged": 0,
+        "appropriate_abstentions": 0,
+        "abstention_percent_of_judged": null
+      },
+      "multi_passage": {
+        "planned": 10,
+        "generated": 0,
+        "generation_completion_percent": 0.0,
+        "faith_judged": 0,
+        "faith_missing": 10,
+        "no_factual_claims": 0,
+        "faithfulness": {
+          "n": 0,
+          "metrics": {}
+        },
+        "claim_verdict_counts": {},
+        "accuracy_judged": 0,
+        "accuracy_missing": 10,
+        "accuracy_counts": {
+          "correct": 0,
+          "partial": 0,
+          "incorrect": 0,
+          "abstained": 0
+        },
+        "accuracy_percent_of_judged": {
+          "correct": null,
+          "partial": null,
+          "incorrect": null,
+          "abstained": null
+        },
+        "judge_abstention_disagreements": 0,
+        "negative_missing": 0,
+        "negative_planned": 0,
+        "negative_judged": 0,
+        "appropriate_abstentions": 0,
+        "abstention_percent_of_judged": null
+      },
+      "paraphrase": {
+        "planned": 5,
+        "generated": 0,
+        "generation_completion_percent": 0.0,
+        "faith_judged": 0,
+        "faith_missing": 5,
+        "no_factual_claims": 0,
+        "faithfulness": {
+          "n": 0,
+          "metrics": {}
+        },
+        "claim_verdict_counts": {},
+        "accuracy_judged": 0,
+        "accuracy_missing": 5,
+        "accuracy_counts": {
+          "correct": 0,
+          "partial": 0,
+          "incorrect": 0,
+          "abstained": 0
+        },
+        "accuracy_percent_of_judged": {
+          "correct": null,
+          "partial": null,
+          "incorrect": null,
+          "abstained": null
+        },
+        "judge_abstention_disagreements": 0,
+        "negative_missing": 0,
+        "negative_planned": 0,
+        "negative_judged": 0,
+        "appropriate_abstentions": 0,
+        "abstention_percent_of_judged": null
+      },
+      "rare_detail": {
+        "planned": 9,
+        "generated": 0,
+        "generation_completion_percent": 0.0,
+        "faith_judged": 0,
+        "faith_missing": 9,
+        "no_factual_claims": 0,
+        "faithfulness": {
+          "n": 0,
+          "metrics": {}
+        },
+        "claim_verdict_counts": {},
+        "accuracy_judged": 0,
+        "accuracy_missing": 9,
+        "accuracy_counts": {
+          "correct": 0,
+          "partial": 0,
+          "incorrect": 0,
+          "abstained": 0
+        },
+        "accuracy_percent_of_judged": {
+          "correct": null,
+          "partial": null,
+          "incorrect": null,
+          "abstained": null
+        },
+        "judge_abstention_disagreements": 0,
+        "negative_missing": 0,
+        "negative_planned": 0,
+        "negative_judged": 0,
+        "appropriate_abstentions": 0,
+        "abstention_percent_of_judged": null
+      },
+      "unanswerable": {
+        "planned": 3,
+        "generated": 0,
+        "generation_completion_percent": 0.0,
+        "faith_judged": 0,
+        "faith_missing": 3,
+        "no_factual_claims": 0,
+        "faithfulness": {
+          "n": 0,
+          "metrics": {}
+        },
+        "claim_verdict_counts": {},
+        "accuracy_judged": 0,
+        "accuracy_missing": 3,
+        "accuracy_counts": {
+          "correct": 0,
+          "partial": 0,
+          "incorrect": 0,
+          "abstained": 0
+        },
+        "accuracy_percent_of_judged": {
+          "correct": null,
+          "partial": null,
+          "incorrect": null,
+          "abstained": null
+        },
+        "judge_abstention_disagreements": 0,
+        "negative_missing": 3,
+        "negative_planned": 3,
+        "negative_judged": 0,
+        "appropriate_abstentions": 0,
+        "abstention_percent_of_judged": null
+      }
+    }
+  },
+  "finished_utc": "2026-11-16T10:54:49.817620+00:00"
+}
